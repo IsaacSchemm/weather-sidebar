@@ -15,6 +15,7 @@
         $(() => {
             var viewModel = new WeatherViewModel();
             ko.applyBindings(viewModel, document.body);
+            viewModel.update();
         });
     </script>
 </head>
@@ -33,6 +34,7 @@
         </div>
         <div id="weather" data-bind="if: !settingsModel()">
             <div data-bind="text: error"></div>
+            <!-- ko if: temperature() != null -->
             <div id="currentTemp" data-bind="text: temperature">
                 00&deg;
             </div>
@@ -51,6 +53,7 @@
                 </tr>
             </table>
             <hr />
+            <!-- /ko -->
             <div>
                 <a href="#" data-bind="click: configureSettings">Configure settings</a>
             </div>
