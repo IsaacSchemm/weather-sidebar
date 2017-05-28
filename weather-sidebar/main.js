@@ -23,14 +23,13 @@ class WeatherViewModel {
         this.loadSettings();
     }
 
-    loadSettings(settings) {
+    // Loads and applies new settings from HTML local storage.
+    loadSettings() {
         try {
-            if (settings == null) {
-                if (!window.localStorage) return;
-                let json = localStorage.getItem("settings");
-                if (json == null) return;
-                settings = JSON.parse(json);
-            }
+            let json = localStorage.getItem("settings");
+            if (json == null) return;
+            let settings = JSON.parse(json);
+
             this.twelveHourTime(settings.twelveHourTime);
             this.defaultLatitude(settings.latitude);
             this.defaultLongitude(settings.longitude);
@@ -43,6 +42,8 @@ class WeatherViewModel {
         }
     }
 
+    // Returns a Promise that resolves to the current position or gets
+    // rejected if the current position cannot be determined.
     getCurrentPosition() {
         return new Promise((resolve, reject) => {
             if (!this.useGeolocation() || !navigator.geolocation) {
@@ -53,6 +54,8 @@ class WeatherViewModel {
         });
     }
 
+    // Updates the location to use for forecasting, using either the actual
+    // current location or the default defined in the settings.
     async update() {
         let coords;
         try {
@@ -65,10 +68,12 @@ class WeatherViewModel {
             };
         }
 
-        this.updateLocation(coords);
-    }
+        // Limit precision of numbers to avoid unnecessary reloads of forecast
+        coords = {
+            latitude: +coords.latitude.toFixed(3),
+            longitude: +coords.longitude.toFixed(3)
+        };
 
-    updateLocation(coords) {
         if (coords.latitude == this.lastLatitude && coords.longitude == this.lastLongitude) {
             console.log("Same location")
             return;
@@ -79,6 +84,7 @@ class WeatherViewModel {
         this.updateForecast();
     }
 
+    // Updates the forecast information.
     async updateForecast() {
         try {
             if (this.lastLatitude == null || this.lastLongitude == null) {
@@ -154,15 +160,21 @@ class WeatherViewModel {
 
 class SettingsViewModel {
     constructor(parent) {
+        this.parent = parent;
+
+        let json = localStorage.getItem("settings");
+        if (json == null) return;
+        let settings = JSON.parse(json);
+
         let numberToString = i => {
             if (i == null) return "";
             else return `${i}`;
         };
-        this.parent = parent;
-        this.twelveHourTime = ko.observable(parent.twelveHourTime());
-        this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
-        this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
-        this.useGeolocation = ko.observable(parent.useGeolocation());
+
+        this.twelveHourTime = ko.observable(settings.twelveHourTime);
+        this.latitude = ko.observable(numberToString(settings.latitude));
+        this.longitude = ko.observable(numberToString(settings.longitude));
+        this.useGeolocation = ko.observable(settings.useGeolocation);
     }
 
     saveSettings() {
@@ -176,10 +188,8 @@ class SettingsViewModel {
             longitude: normalizeNumber(this.longitude()),
             useGeolocation: !!this.useGeolocation()
         }
-        if (window.localStorage) {
-            localStorage.setItem("settings", JSON.stringify(settings));
-        }
+        localStorage.setItem("settings", JSON.stringify(settings));
         this.parent.settingsModel(null);
-        this.parent.loadSettings(settings);
+        this.parent.loadSettings();
     }
 }
