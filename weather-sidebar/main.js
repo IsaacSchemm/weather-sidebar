@@ -15,8 +15,16 @@ class WeatherViewModel {
         this.temperature = ko.observable(null);
         this.description = ko.observable(null);
 
-        this.lastLatitude = null;
-        this.lastLongitude = null;
+        this.currentLatitude = ko.observable(null);
+        this.currentLongitude = ko.observable(null);
+
+        const deg = String.fromCodePoint(0xB0);
+        this.currentLatitudeDisplay = ko.pureComputed(() =>
+            `${Math.abs(this.currentLatitude() || 0)}${deg} ${this.currentLatitude > 0 ? "N" : "S"}`);
+        this.currentLongitudeDisplay = ko.pureComputed(() =>
+            `${Math.abs(this.currentLongitude() || 0)}${deg} ${this.currentLongitude > 0 ? "E" : "W"}`);
+        this.mapLink = ko.pureComputed(() =>
+            `https://www.google.com/maps/preview/@${this.currentLatitude()},${this.currentLongitude()},11z`);
 
         this.hourlyForecast = ko.observableArray();
 
@@ -74,27 +82,27 @@ class WeatherViewModel {
             longitude: +coords.longitude.toFixed(3)
         };
 
-        if (coords.latitude == this.lastLatitude && coords.longitude == this.lastLongitude) {
+        if (coords.latitude == this.currentLatitude() && coords.longitude == this.currentLongitude()) {
             console.log("Same location")
             return;
         }
 
-        this.lastLatitude = coords.latitude;
-        this.lastLongitude = coords.longitude;
+        this.currentLatitude(coords.latitude);
+        this.currentLongitude(coords.longitude);
         this.updateForecast();
     }
 
     // Updates the forecast information.
     async updateForecast() {
         try {
-            if (this.lastLatitude == null || this.lastLongitude == null) {
+            if (this.currentLatitude() == null || this.currentLongitude() == null) {
                 this.temperature(null);
                 this.description(null);
                 this.hourlyForecast([]);
                 return;
             }
 
-            let data = await $.getJSON(`proxy.ashx?url=${this.lastLatitude},${this.lastLongitude}`);
+            let data = await $.getJSON(`proxy.ashx?url=${this.currentLatitude()},${this.currentLongitude()}`);
             console.log(data);
 
             this.alerts([]);

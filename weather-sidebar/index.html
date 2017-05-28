@@ -32,13 +32,20 @@
     </div>
     <div id="weather" data-bind="if: !settingsModel()">
         <div data-bind="text: error"></div>
+        <div data-bind="if: currentLatitude() && currentLongitude()">
+            Your location:
+            <a href="#" target="_blank" data-bind="attr: { href: mapLink }">
+                <span data-bind="text: currentLatitudeDisplay"></span>,
+                <span data-bind="text: currentLongitudeDisplay"></span>
+            </a>
+        </div>
         <div id="alerts" data-bind="foreach: alerts">
             <div data-bind="attr: { class: severity }">
                 <a href="#" target="_blank" data-bind="text: title, attr: { href: uri }"></a>
             </div>
         </div>
         <!-- ko if: temperature() == null && useGeolocation() -->
-        <div>The weather sidebar is configured to use your current location. Please accept the prompt above.</div>
+        <div>The weather sidebar is configured to use your current location. Please accept the prompt above (if any).</div>
         <!-- /ko -->
         <!-- ko if: temperature() == null && !useGeolocation() -->
         <div>Loading...</div>
