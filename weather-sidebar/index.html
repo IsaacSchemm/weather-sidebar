@@ -5,9 +5,9 @@
     <meta charset="utf-8" />
     <title>Weather</title>
     <link rel="stylesheet" href="weather.css" type="text/css" />
-    <link rel="stylesheet" href="compact-light.css" type="text/css" title="Compact Light" />
+    <link rel="stylesheet" href="native.css" type="text/css" title="Native" />
     <link rel="stylesheet alternate" href="compact-dark.css" type="text/css" title="Compact Dark" />
-    <link rel="stylesheet alternate" href="native.css" type="text/css" title="Native" />
+    <link rel="stylesheet alternate" href="compact-light.css" type="text/css" title="Compact Light" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
     <script src="main.js"></script>
@@ -38,6 +38,7 @@
                 <span data-bind="text: currentLatitudeDisplay"></span>,
                 <span data-bind="text: currentLongitudeDisplay"></span>
             </a>
+            <hr />
         </div>
         <div id="alerts" data-bind="foreach: alerts">
             <div data-bind="attr: { class: severity }">
@@ -51,6 +52,9 @@
         <div>Loading...</div>
         <!-- /ko -->
         <!-- ko if: temperature() != null -->
+        <div id="currentTime" data-bind="text: time">
+            12:00 PM
+        </div>
         <div id="currentTemp" data-bind="text: temperature">
             00&deg;
         </div>

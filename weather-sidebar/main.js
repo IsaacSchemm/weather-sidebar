@@ -12,6 +12,7 @@ class WeatherViewModel {
         this.error = ko.observable(null);
 
         this.alerts = ko.observableArray();
+        this.time = ko.observable(null);
         this.temperature = ko.observable(null);
         this.description = ko.observable(null);
 
@@ -97,6 +98,7 @@ class WeatherViewModel {
     async updateForecast() {
         try {
             if (this.currentLatitude() == null || this.currentLongitude() == null) {
+                this.time(null);
                 this.temperature(null);
                 this.description(null);
                 this.hourlyForecast([]);
@@ -125,11 +127,12 @@ class WeatherViewModel {
                 });
             }
 
+            this.time(new Date(data.currently.time * 1000).toLocaleTimeString());
             this.temperature(Math.round(data.currently.temperature) + String.fromCodePoint(0xB0));
             this.description(data.currently.summary);
 
             this.hourlyForecast([]);
-            for (let h of data.hourly.data.slice(0, 18)) {
+            for (let h of data.hourly.data.slice(0, 12)) {
                 let icon = (() => {
                     switch (h.icon) {
                         case "clear-day":
