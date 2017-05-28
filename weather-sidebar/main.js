@@ -41,15 +41,29 @@ class WeatherViewModel {
         }
     }
 
-    update() {
-        this.updateLocation({
-            latitude: this.defaultLatitude(),
-            longitude: this.defaultLongitude()
+    getCurrentPosition() {
+        return new Promise((resolve, reject) => {
+            if (!this.useGeolocation() || !navigator.geolocation) {
+                reject();
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(resolve, reject);
         });
+    }
 
-        if (this.useGeolocation() && navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(l => this.updateLocation(l.coords));
+    async update() {
+        let coords;
+        try {
+            let location = await this.getCurrentPosition();
+            coords = location.coords;
+        } catch (e) {
+            coords = {
+                latitude: this.defaultLatitude(),
+                longitude: this.defaultLongitude()
+            };
         }
+
+        this.updateLocation(coords);
     }
 
     updateLocation(coords) {
@@ -151,6 +165,5 @@ class SettingsViewModel {
         }
         this.parent.settingsModel(null);
         this.parent.loadSettings(settings);
-        this.parent.updateForecast();
     }
 }
