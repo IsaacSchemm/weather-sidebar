@@ -35,13 +35,14 @@ class WeatherViewModel {
     loadSettings() {
         try {
             let json = localStorage.getItem("settings");
-            if (json == null) return;
-            let settings = JSON.parse(json);
+            if (json != null) {
+                let settings = JSON.parse(json);
 
-            this.twelveHourTime(settings.twelveHourTime);
-            this.defaultLatitude(settings.latitude);
-            this.defaultLongitude(settings.longitude);
-            this.useGeolocation(settings.useGeolocation);
+                this.twelveHourTime(settings.twelveHourTime);
+                this.defaultLatitude(settings.latitude);
+                this.defaultLongitude(settings.longitude);
+                this.useGeolocation(settings.useGeolocation);
+            }
 
             this.update();
         } catch (e) {
@@ -102,19 +103,25 @@ class WeatherViewModel {
                 return;
             }
 
-            let data = await $.getJSON(`proxy.ashx?url=${this.currentLatitude()},${this.currentLongitude()}`);
+            let data = null;
+            for (let proxyPage of ["proxy.php", "proxy.ashx"]) {
+                try {
+                    data = await $.getJSON(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}`);
+                } catch (e) { }
+            }
             console.log(data);
+            if (data == null) return;
 
             this.alerts([]);
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
                     title += ` (until ${new Date(a.expires * 1000).toLocaleString()})`
-                }
+            }
                 this.alerts.push({
-                    title: title,
-                    uri: a.uri,
-                    severity: a.severity
+                        title: title,
+                        uri: a.uri,
+                        severity: a.severity
                 });
             }
 
@@ -144,15 +151,15 @@ class WeatherViewModel {
                             return String.fromCodePoint(9925);
                         default:
                             return "";
-                    }
+                }
                 })();
                 icon += String.fromCodePoint(0xFE0F);
                 this.hourlyForecast.push({
-                    time: new Date(h.time * 1000).toLocaleTimeString(),
-                    temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
-                    icon: icon,
-                    summary: h.summary,
-                    precipProbability: Math.round(h.precipProbability * 100) + "%"
+                        time: new Date(h.time * 1000).toLocaleTimeString(),
+                        temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
+                        icon: icon,
+                        summary: h.summary,
+                        precipProbability: Math.round(h.precipProbability * 100) + "%"
                 });
             }
         } catch (e) {
