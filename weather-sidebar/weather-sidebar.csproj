@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="compact-dark.css" />
     <Content Include="compact-light.css" />
+    <Content Include="main.js" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

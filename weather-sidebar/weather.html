@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="compact-light.css" type="text/css" title="Compact Light" />
     <link rel="stylesheet alternate" href="compact-dark.css" type="text/css" title="Compact Dark" />
     <link rel="stylesheet alternate" href="native.css" type="text/css" title="Native" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
+    <script type="text/javascript">
+        $(() => {
+            var viewModel = new WeatherViewModel();
+            ko.applyBindings(viewModel, document.body);
+        });
+    </script>
 </head>
 <body>
     <div id="main">
@@ -24,62 +33,20 @@
         </div>
         <hr />
         <div id="weather">
-            <div id="currentTemp">
+            <div id="currentTemp" data-bind="text: temperature">
                 00&deg;
             </div>
-            <div id="currentDesc">
+            <div id="currentDesc" data-bind="text: description">
                 Clear
             </div>
             <hr />
             <h1>Hourly forecast</h1>
-            <table id="hourly">
+            <table id="hourly" data-bind="foreach: hourlyForecast">
                 <tr>
-                    <td class="time">8:00 AM</td>
-                    <td class="temp">40&deg;</td>
-                    <td class="icon">&#9729;</td>
-                    <td class="summary">Cloudy</td>
-                </tr>
-                <tr>
-                    <td class="time">9:00 AM</td>
-                    <td class="temp">42&deg;</td>
-                    <td class="icon">&#9925;</td>
-                    <td class="summary">Partly Cloudy</td>
-                </tr>
-                <tr>
-                    <td class="time">10:00 AM</td>
-                    <td class="temp">100&deg;</td>
-                    <td class="icon">&#128262;</td>
-                    <td class="summary">Clear</td>
-                </tr>
-                <tr>
-                    <td class="time">11:00 AM</td>
-                    <td class="temp">38&deg;</td>
-                    <td class="icon">&#127783;</td>
-                    <td class="summary">Rain</td>
-                </tr>
-                <tr>
-                    <td class="time">12:00 PM</td>
-                    <td class="temp">27&deg;</td>
-                    <td class="icon">&#127784;</td>
-                    <td class="summary">Snow</td>
-                </tr>
-                <tr>
-                    <td class="time">1:00 PM</td>
-                    <td class="temp">-11&deg;</td>
-                    <td class="icon">&#127784;</td>
-                    <td class="summary">Sleet</td>
-                </tr>
-                <tr>
-                    <td class="time">2:00 PM</td>
-                    <td class="temp">31&deg;</td>
-                    <td class="icon">&#128168;</td>
-                    <td class="summary">Wind</td>
-                </tr>
-                <tr>
-                    <td class="time">3:00 PM</td>
-                    <td class="temp">40&deg;</td>
-                    <td class="icon">&#127787;</td>
-                    <td class="summary">Fog</td>
+                    <td class="time" data-bind="text: time">4:00 AM</td>
+                    <td class="temp" data-bind="text: temp">38&deg;</td>
+                    <td class="icon" data-bind="text: icon">&#9729;</td>
+                    <td class="summary" data-bind="text: summary">Cloudy</td>
                 </tr>
             </table>
         </div>
