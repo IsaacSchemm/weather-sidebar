@@ -9,7 +9,6 @@ hr {
     border-bottom: 1px solid threedhighlight;
     border-left: 0;
     border-right: 0;
-    max-width: calc(100% - 32px);
 }
 
 #main, #footer {
