@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="compact-light.css" type="text/css" title="Compact Light" />
     <link rel="stylesheet alternate" href="compact-dark.css" type="text/css" title="Compact Dark" />
     <link rel="stylesheet alternate" href="native.css" type="text/css" title="Native" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.slim.min.js" integrity="sha256-k2WSCIexGzOj3Euiig+TlR8gA0EmPjuc79OEeY5L45g=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
     <script src="main.js"></script>
     <script type="text/javascript">
@@ -32,6 +32,7 @@
             <button id="saveSettings" data-bind="click: saveSettings">Save settings</button>
         </div>
         <div id="weather" data-bind="if: !settingsModel()">
+            <div data-bind="text: error"></div>
             <div id="currentTemp" data-bind="text: temperature">
                 00&deg;
             </div>

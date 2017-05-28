@@ -1,4 +1,6 @@
-﻿class WeatherViewModel {
+﻿"use strict";
+
+class WeatherViewModel {
     constructor() {
         this.settingsModel = ko.observable(null);
 
@@ -7,59 +9,58 @@
         this.longitude = ko.observable(-122.3301);
         this.useGeolocation = ko.observable(true);
 
+        this.error = ko.observable(null);
         this.temperature = ko.observable(70);
         this.description = ko.observable("Clear");
 
-        this.hourlyForecast = ko.observableArray([
-            {
-                time: "8:00 AM",
-                temp: "40\u00B0",
-                icon: String.fromCodePoint(9729),
-                summary: "Cloudy"
-            },
-            {
-                time: "9:00 AM",
-                temp: "42\u00B0",
-                icon: String.fromCodePoint(9925),
-                summary: "Partly Cloudy"
-            },
-            {
-                time: "10:00 AM",
-                temp: "100\u00B0",
-                icon: String.fromCodePoint(128262),
-                summary: "Clear"
-            },
-            {
-                time: "11:00 AM",
-                temp: "38\u00B0",
-                icon: String.fromCodePoint(127783),
-                summary: "Rain"
-            },
-            {
-                time: "12:00 PM",
-                temp: "27\u00B0",
-                icon: String.fromCodePoint(127784),
-                summary: "Snow"
-            },
-            {
-                time: "1:00 PM",
-                temp: "-11\u00B0",
-                icon: String.fromCodePoint(127784),
-                summary: "Sleet"
-            },
-            {
-                time: "2:00 PM",
-                temp: "31\u00B0",
-                icon: String.fromCodePoint(128168),
-                summary: "Wind"
-            },
-            {
-                time: "3:00 PM",
-                temp: "40\u00B0",
-                icon: String.fromCodePoint(127787),
-                summary: "Fog"
-            },
-        ]);
+        this.hourlyForecast = ko.observableArray();
+
+        this.updateForecast();
+    }
+
+    async updateForecast() {
+        try {
+            let data = await $.getJSON(`proxy.ashx?url=${this.latitude()},${this.longitude()}`);
+            
+            this.temperature(Math.round(data.currently.temperature));
+            this.description(data.summary);
+
+            this.hourlyForecast([]);
+            for (let h of data.hourly.data) {
+                let icon = (() => {
+                    switch (h.icon) {
+                        case "clear-day":
+                        case "clear-night":
+                            return String.fromCodePoint(128262);
+                        case "rain":
+                            return String.fromCodePoint(127783);
+                        case "snow":
+                        case "sleet":
+                            return String.fromCodePoint(127784);
+                        case "wind":
+                            return String.fromCodePoint(128168);
+                        case "fog":
+                            return String.fromCodePoint(127787);
+                        case "cloudy":
+                            return String.fromCodePoint(9729);
+                        case "partly-cloudy-day":
+                        case "partly-cloudy-night":
+                            return String.fromCodePoint(9925);
+                        default:
+                            return "";
+                    }
+                })();
+                this.hourlyForecast.push({
+                    time: new Date(h.time * 1000).toLocaleTimeString(),
+                    temp: Math.round(h.temperature) + String.fromCodePoint(0xB0),
+                    icon: icon,
+                    summary: h.summary
+                });
+            }
+        } catch (e) {
+            console.error(e);
+            this.error(e.message || e.responseText || "An error occured.");
+        }
     }
 
     configureSettings() {
