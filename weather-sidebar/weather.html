@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Weather</title>
+    <link rel="stylesheet" href="weather.css" type="text/css" />
+</head>
+<body>
+    <div id="main">
+        <div id="setup">
+            <label><input id="twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
+            <hr />
+            <label>Default location</label>
+            <label class="latlng">Latitude: <input id="latitude" type="text" /></label>
+            <label class="latlng">Longitude: <input id="longitude" type="text" /></label>
+            <button id="getCurrentLocation">Detect</button>
+            <label><input id="useGeolocation" type="checkbox" /> Always use my current location when possible</label>
+            <hr />
+            <button id="saveSettings">Save settings</button>
+        </div>
+        <hr />
+        <div id="weather">
+            <div id="currentTemp">
+                00&deg;
+            </div>
+            <div id="currentDesc">
+                Clear
+            </div>
+            <hr />
+            <h1>Hourly forecast</h1>
+            <table id="hourly">
+                <tr>
+                    <td class="time">8:00 AM</td>
+                    <td class="temp">40&deg;</td>
+                    <td class="icon">&#9729;</td>
+                    <td class="summary">Cloudy</td>
+                </tr>
+                <tr>
+                    <td class="time">9:00 AM</td>
+                    <td class="temp">42&deg;</td>
+                    <td class="icon">&#9925;</td>
+                    <td class="summary">Partly Cloudy</td>
+                </tr>
+                <tr>
+                    <td class="time">10:00 AM</td>
+                    <td class="temp">100&deg;</td>
+                    <td class="icon">&#128262;</td>
+                    <td class="summary">Clear</td>
+                </tr>
+                <tr>
+                    <td class="time">11:00 AM</td>
+                    <td class="temp">38&deg;</td>
+                    <td class="icon">&#127783;</td>
+                    <td class="summary">Rain</td>
+                </tr>
+                <tr>
+                    <td class="time">12:00 PM</td>
+                    <td class="temp">27&deg;</td>
+                    <td class="icon">&#127784;</td>
+                    <td class="summary">Snow</td>
+                </tr>
+                <tr>
+                    <td class="time">1:00 PM</td>
+                    <td class="temp">-11&deg;</td>
+                    <td class="icon">&#127784;</td>
+                    <td class="summary">Sleet</td>
+                </tr>
+                <tr>
+                    <td class="time">2:00 PM</td>
+                    <td class="temp">31&deg;</td>
+                    <td class="icon">&#128168;</td>
+                    <td class="summary">Wind</td>
+                </tr>
+                <tr>
+                    <td class="time">3:00 PM</td>
+                    <td class="temp">40&deg;</td>
+                    <td class="icon">&#127787;</td>
+                    <td class="summary">Fog</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="footer">
+        <a href="#" id="addToSidebar">Add to sidebar</a>
+        <a href="https://darksky.net/poweredby/" target="_blank">Powered by Dark Sky</a>
+    </div>
+</body>
+</html>
