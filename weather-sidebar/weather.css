@@ -21,7 +21,6 @@ h1 {
 #main {
     flex: 1 0 0px;
     overflow-y: auto;
-    padding: 8px 0;
 }
 
 #footer {
@@ -92,10 +91,4 @@ table#hourly .icon {
 
 table#hourly .summary {
     text-align: left;
-}
-
-#addToSidebar {
-    float: right;
-    padding-right: 8px;
-    font-style: italic;
 }

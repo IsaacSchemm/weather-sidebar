@@ -1,6 +1,8 @@
 ﻿class WeatherViewModel {
     constructor() {
-        this.twelveHourClock = ko.observable(true);
+        this.settingsModel = ko.observable(null);
+
+        this.twelveHourTime = ko.observable(true);
         this.latitude = ko.observable(47.6038);
         this.longitude = ko.observable(-122.3301);
         this.useGeolocation = ko.observable(true);
@@ -59,5 +61,24 @@
             },
         ]);
     }
+
+    configureSettings() {
+        this.settingsModel(new SettingsViewModel(this));
+    }
 }
 
+class SettingsViewModel {
+    constructor(parent) {
+        this.parent = parent;
+        for (let name of ["twelveHourTime", "latitude", "longitude", "useGeolocation"]) {
+            this[name] = ko.observable(parent[name]());
+        }
+    }
+
+    saveSettings() {
+        for (let name of["twelveHourTime", "latitude", "longitude", "useGeolocation"]) {
+            ko.observable(this.parent[name](this[name]()));
+        }
+        this.parent.settingsModel(null);
+    }
+}
