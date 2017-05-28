@@ -10,6 +10,8 @@ class WeatherViewModel {
         this.useGeolocation = ko.observable(true);
 
         this.error = ko.observable(null);
+
+        this.alerts = ko.observableArray();
         this.temperature = ko.observable(null);
         this.description = ko.observable(null);
 
@@ -87,7 +89,20 @@ class WeatherViewModel {
             }
 
             let data = await $.getJSON(`proxy.ashx?url=${this.lastLatitude},${this.lastLongitude}`);
-            
+            console.log(data);
+
+            this.alerts([]);
+            for (let a of data.alerts || []) {
+                let title = a.title;
+                if (a.expires) {
+                    title += ` (until ${new Date(a.expires * 1000).toLocaleString()})`
+                }
+                this.alerts.push({
+                    title: title,
+                    uri: a.uri
+                });
+            }
+
             this.temperature(Math.round(data.currently.temperature) + String.fromCodePoint(0xB0));
             this.description(data.currently.summary);
 

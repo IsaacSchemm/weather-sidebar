@@ -64,6 +64,18 @@ button#saveSettings {
     margin: auto;
 }
 
+#alerts > * {
+    background-color: red;
+    font-weight: bold;
+    color: white;
+    padding: 4px 0;
+    margin: 4px 0;
+}
+
+#alerts a {
+    color: white;
+}
+
 #currentTemp {
     font-size: 400%;
 }

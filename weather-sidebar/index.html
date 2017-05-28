@@ -33,6 +33,11 @@
         </div>
         <div id="weather" data-bind="if: !settingsModel()">
             <div data-bind="text: error"></div>
+            <div id="alerts" data-bind="foreach: alerts">
+                <div>
+                    <a href="#" target="_blank" data-bind="text: title, attr: { href: uri }"></a>
+                </div>
+            </div>
             <!-- ko if: temperature() != null -->
             <div id="currentTemp" data-bind="text: temperature">
                 00&deg;
