@@ -15,7 +15,6 @@
         $(() => {
             var viewModel = new WeatherViewModel();
             ko.applyBindings(viewModel, document.body);
-            viewModel.update();
         });
     </script>
 </head>
@@ -28,7 +27,7 @@
             <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="text" /></label>
             <label class="latlng">Longitude: <input id="longitude" data-bind="value: longitude" type="text" /></label>
             <button id="getCurrentLocation">Detect</button>
-            <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Always use my current location when possible</label>
+            <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Use my current location instead if possible</label>
             <hr />
             <button id="saveSettings" data-bind="click: saveSettings">Save settings</button>
         </div>
