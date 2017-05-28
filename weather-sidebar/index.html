@@ -23,8 +23,8 @@
         <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
         <hr />
         <label>Default location</label>
-        <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="text" /></label>
-        <label class="latlng">Longitude: <input id="longitude" data-bind="value: longitude" type="text" /></label>
+        <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="number" step="any" /></label>
+        <label class="latlng">Longitude: <input id="longitude" data-bind="value: longitude" type="number" step="any" /></label>
         <button id="getCurrentLocation">Detect</button>
         <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Use my current location instead if possible</label>
         <hr />
