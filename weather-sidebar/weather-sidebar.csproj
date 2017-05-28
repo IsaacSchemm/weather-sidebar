@@ -66,9 +66,11 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="compact-light.css" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="native.css" />
     <Content Include="weather.css" />
     <Content Include="weather.html" />
     <Content Include="Web.config" />

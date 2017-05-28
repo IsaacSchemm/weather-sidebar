@@ -1,0 +1,20 @@
+﻿h1 {
+    font: -moz-window;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+hr {
+    border-top: 1px solid threedshadow;
+    border-bottom: 1px solid threedhighlight;
+    border-left: 0;
+    border-right: 0;
+    max-width: calc(100% - 32px);
+}
+
+#main, #footer {
+    background-color: ThreeDFace;
+    color: ButtonText;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font: -moz-window;
+}
