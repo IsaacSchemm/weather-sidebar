@@ -180,19 +180,15 @@ class SettingsViewModel {
     constructor(parent) {
         this.parent = parent;
 
-        let json = localStorage.getItem("settings");
-        if (json == null) return;
-        let settings = JSON.parse(json);
-
         let numberToString = i => {
             if (i == null) return "";
             else return `${i}`;
         };
 
-        this.twelveHourTime = ko.observable(settings.twelveHourTime);
-        this.latitude = ko.observable(numberToString(settings.latitude));
-        this.longitude = ko.observable(numberToString(settings.longitude));
-        this.useGeolocation = ko.observable(settings.useGeolocation);
+        this.twelveHourTime = ko.observable(parent.twelveHourTime());
+        this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
+        this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
+        this.useGeolocation = ko.observable(parent.useGeolocation());
     }
 
     saveSettings() {
