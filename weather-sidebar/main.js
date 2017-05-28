@@ -99,7 +99,8 @@ class WeatherViewModel {
                 }
                 this.alerts.push({
                     title: title,
-                    uri: a.uri
+                    uri: a.uri,
+                    severity: a.severity
                 });
             }
 

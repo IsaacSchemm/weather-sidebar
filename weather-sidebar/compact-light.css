@@ -2,7 +2,7 @@
     font-size: 12px;
 }
 
-#main, #footer {
+body {
     background-color: #fbfbfb;
     color: black;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

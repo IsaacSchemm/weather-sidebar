@@ -19,55 +19,60 @@
     </script>
 </head>
 <body>
-    <div id="main">
-        <div id="setup" data-bind="with: settingsModel">
-            <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
-            <hr />
-            <label>Default location</label>
-            <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="text" /></label>
-            <label class="latlng">Longitude: <input id="longitude" data-bind="value: longitude" type="text" /></label>
-            <button id="getCurrentLocation">Detect</button>
-            <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Use my current location instead if possible</label>
-            <hr />
-            <button id="saveSettings" data-bind="click: saveSettings">Save settings</button>
-        </div>
-        <div id="weather" data-bind="if: !settingsModel()">
-            <div data-bind="text: error"></div>
-            <div id="alerts" data-bind="foreach: alerts">
-                <div>
-                    <a href="#" target="_blank" data-bind="text: title, attr: { href: uri }"></a>
-                </div>
-            </div>
-            <!-- ko if: temperature() != null -->
-            <div id="currentTemp" data-bind="text: temperature">
-                00&deg;
-            </div>
-            <div id="currentDesc" data-bind="text: description">
-                Clear
-            </div>
-            <hr />
-            <h1>Hourly forecast</h1>
-            <table id="hourly" data-bind="foreach: hourlyForecast">
-                <tr>
-                    <td class="time" data-bind="text: time">4:00 AM</td>
-                    <td class="temp" data-bind="text: temp">38&deg;</td>
-                    <td class="icon" data-bind="text: icon">&#9729;</td>
-                    <td class="summary" data-bind="text: summary">Cloudy</td>
-                    <td class="precipProbability" data-bind="text: precipProbability">10%</td>
-                </tr>
-            </table>
-            <hr />
-            <!-- /ko -->
-            <div>
-                <a href="#" data-bind="click: configureSettings">Configure settings</a>
-            </div>
-            <div>
-                <a href="#" id="addToSidebar">Add to sidebar</a>
-            </div>
-        </div>
+    <div id="setup" data-bind="with: settingsModel">
+        <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
+        <hr />
+        <label>Default location</label>
+        <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="text" /></label>
+        <label class="latlng">Longitude: <input id="longitude" data-bind="value: longitude" type="text" /></label>
+        <button id="getCurrentLocation">Detect</button>
+        <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Use my current location instead if possible</label>
+        <hr />
+        <button id="saveSettings" data-bind="click: saveSettings">Save settings</button>
     </div>
-    <div id="footer">
-        <a href="https://darksky.net/poweredby/" target="_blank">Powered by Dark Sky</a>
+    <div id="weather" data-bind="if: !settingsModel()">
+        <div data-bind="text: error"></div>
+        <div id="alerts" data-bind="foreach: alerts">
+            <div data-bind="attr: { class: severity }">
+                <a href="#" target="_blank" data-bind="text: title, attr: { href: uri }"></a>
+            </div>
+        </div>
+        <!-- ko if: temperature() == null && useGeolocation() -->
+        <div>The weather sidebar is configured to use your current location. Please accept the prompt above.</div>
+        <!-- /ko -->
+        <!-- ko if: temperature() == null && !useGeolocation() -->
+        <div>Loading...</div>
+        <!-- /ko -->
+        <!-- ko if: temperature() != null -->
+        <div id="currentTemp" data-bind="text: temperature">
+            00&deg;
+        </div>
+        <div id="currentDesc" data-bind="text: description">
+            Clear
+        </div>
+        <hr />
+        <h1>Hourly forecast</h1>
+        <table id="hourly" data-bind="foreach: hourlyForecast">
+            <tr>
+                <td class="time" data-bind="text: time">4:00 AM</td>
+                <td class="temp" data-bind="text: temp">38&deg;</td>
+                <td class="icon" data-bind="text: icon">&#9729;</td>
+                <td class="summary" data-bind="text: summary">Cloudy</td>
+                <td class="precipProbability" data-bind="text: precipProbability">10%</td>
+            </tr>
+        </table>
+        <!-- /ko -->
+        <hr />
+        <div>
+            <a href="#" data-bind="click: configureSettings">Configure settings</a>
+        </div>
+        <div>
+            <a href="#" id="addToSidebar">Add to sidebar</a>
+        </div>
+        <hr />
+        <div>
+            <a href="https://darksky.net/poweredby/" target="_blank">Powered by Dark Sky</a>
+        </div>
     </div>
 </body>
 </html>

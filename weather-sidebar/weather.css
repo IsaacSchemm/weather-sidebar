@@ -1,12 +1,7 @@
-﻿html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-}
-
-body {
-    display: flex;
-    flex-direction: column;
+﻿body {
+    font-size: 12px;
+    font-family: sans-serif;
+    text-align: center;
 }
 
 hr {
@@ -16,22 +11,6 @@ hr {
 h1 {
     margin: 8px 0;
     font-size: 16px;
-}
-
-#main {
-    flex: 1 0 0px;
-    overflow-y: auto;
-}
-
-#footer {
-    flex: 0 0 24px;
-    padding-bottom: 4px;
-}
-
-#main, #footer {
-    font-size: 12px;
-    font-family: sans-serif;
-    text-align: center;
 }
 
 #setup > * {
@@ -69,11 +48,21 @@ button#saveSettings {
     font-weight: bold;
     color: white;
     padding: 4px 0;
-    margin: 4px 0;
+    margin: 8px 0;
+}
+
+#alerts > *.advisory {
+    background-color: blue;
+    color: white;
+}
+
+#alerts > *.watch {
+    background-color: yellow;
+    color: black;
 }
 
 #alerts a {
-    color: white;
+    color: inherit;
 }
 
 #currentTemp {
