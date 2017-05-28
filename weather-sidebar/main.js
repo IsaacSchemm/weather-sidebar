@@ -31,7 +31,7 @@ class WeatherViewModel {
                     switch (h.icon) {
                         case "clear-day":
                         case "clear-night":
-                            return String.fromCodePoint(128262);
+                            return String.fromCodePoint(9728);
                         case "rain":
                             return String.fromCodePoint(127783);
                         case "snow":
@@ -50,6 +50,7 @@ class WeatherViewModel {
                             return "";
                     }
                 })();
+                icon += String.fromCodePoint(0xFE0F);
                 this.hourlyForecast.push({
                     time: new Date(h.time * 1000).toLocaleTimeString(),
                     temp: Math.round(h.temperature) + String.fromCodePoint(0xB0),
