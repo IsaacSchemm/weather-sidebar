@@ -26,7 +26,7 @@ class WeatherViewModel {
             this.description(data.summary);
 
             this.hourlyForecast([]);
-            for (let h of data.hourly.data) {
+            for (let h of data.hourly.data.slice(0, 18)) {
                 let icon = (() => {
                     switch (h.icon) {
                         case "clear-day":
@@ -53,9 +53,10 @@ class WeatherViewModel {
                 icon += String.fromCodePoint(0xFE0F);
                 this.hourlyForecast.push({
                     time: new Date(h.time * 1000).toLocaleTimeString(),
-                    temp: Math.round(h.temperature) + String.fromCodePoint(0xB0),
+                    temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
                     icon: icon,
-                    summary: h.summary
+                    summary: h.summary,
+                    precipProbability: h.precipProbability + "%"
                 });
             }
         } catch (e) {
