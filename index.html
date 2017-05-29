@@ -29,6 +29,7 @@
 <body>
     <div id="setup" data-bind="with: settingsModel">
         <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
+        <label><input id="useLocationTime" data-bind="checked: useLocationTime" type="checkbox" /> Use the chosen location's time zone</label>
         <hr />
         <label>Default location</label>
         <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="number" step="any" /></label>

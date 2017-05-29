@@ -5,6 +5,7 @@ class WeatherViewModel {
         this.settingsModel = ko.observable(null);
 
         this.twelveHourTime = ko.observable(true);
+        this.useLocationTime = ko.observable(true);
         this.defaultLatitude = ko.observable(null);
         this.defaultLongitude = ko.observable(null);
         this.useGeolocation = ko.observable(true);
@@ -40,6 +41,7 @@ class WeatherViewModel {
                 let settings = JSON.parse(json);
 
                 this.twelveHourTime(settings.twelveHourTime);
+                this.useLocationTime(settings.useLocationTime);
                 this.defaultLatitude(settings.latitude);
                 this.defaultLongitude(settings.longitude);
                 this.useGeolocation(settings.useGeolocation);
@@ -112,6 +114,7 @@ class WeatherViewModel {
                 } catch (e) { }
             }
             console.log(data);
+
             if (data != null) {
                 localStorage.setItem("lastForecastData", JSON.stringify(data));
             } else {
@@ -122,11 +125,15 @@ class WeatherViewModel {
                 data = JSON.parse(lastDataStr);
             }
 
+            let timezone = this.useLocationTime()
+                ? data.timezone
+                : moment.tz.guess();
+
             this.alerts([]);
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
-                    title += ` (until ${moment.tz(a.expires * 1000, data.timezone).format("h:mm A")})`
+                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format("h:mm A")})`
                 }
                 this.alerts.push({
                         title: title,
@@ -135,7 +142,7 @@ class WeatherViewModel {
                 });
             }
 
-            this.time(moment.tz(data.currently.time * 1000, data.timezone).format("h:mm A z"));
+            this.time(moment.tz(data.currently.time * 1000, timezone).format("h:mm A z"));
             this.temperature(Math.round(data.currently.temperature) + String.fromCodePoint(0xB0));
             this.description(data.currently.summary);
 
@@ -166,7 +173,7 @@ class WeatherViewModel {
                 })();
                 icon += String.fromCodePoint(0xFE0F);
                 this.hourlyForecast.push({
-                        time: moment.tz(h.time * 1000, data.timezone).format("h:mm A"),
+                        time: moment.tz(h.time * 1000, timezone).format("h:mm A"),
                         temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
                         icon: icon,
                         summary: h.summary,
@@ -194,6 +201,7 @@ class SettingsViewModel {
         };
 
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
+        this.useLocationTime = ko.observable(parent.useLocationTime());
         this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
         this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
         this.useGeolocation = ko.observable(parent.useGeolocation());
@@ -206,6 +214,7 @@ class SettingsViewModel {
         };
         let settings = {
             twelveHourTime: !!this.twelveHourTime(),
+            useLocationTime: !!this.useLocationTime(),
             latitude: normalizeNumber(this.latitude()),
             longitude: normalizeNumber(this.longitude()),
             useGeolocation: !!this.useGeolocation()
