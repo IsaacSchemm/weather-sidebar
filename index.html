@@ -28,6 +28,9 @@
     </script>
 </head>
 <body>
+    <noscript>
+        This page requires JavaScript to be enabled.
+    </noscript>
     <div id="setup" style="display: none" data-bind="with: settingsModel">
         <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
         <label><input id="useLocationTime" data-bind="checked: useLocationTime" type="checkbox" /> Use the chosen location's time zone</label>
@@ -49,7 +52,7 @@
         <div data-bind="text: error"></div>
         <div data-bind="if: currentLatitude() && currentLongitude()">
             Your location:
-            <a href="#" target="_blank" data-bind="attr: { href: mapLink }">
+            <a id="mapLink" href="#" target="_blank" data-bind="attr: { href: mapLink }">
                 <span data-bind="text: currentLatitudeDisplay"></span>,
                 <span data-bind="text: currentLongitudeDisplay"></span>
             </a>
@@ -87,7 +90,7 @@
             <a href="#" data-bind="click: configureSettings">Configure settings</a>
         </div>
         <div>
-            <a href="#" id="addToSidebar">Add to sidebar</a>
+            <a href="#" data-bind="if: canAddToSidebar, click: addToSidebar" id="addToSidebar">Add to sidebar</a>
         </div>
         <hr />
         <div>

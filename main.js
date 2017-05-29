@@ -19,6 +19,10 @@ class WeatherViewModel {
     constructor() {
         this.settingsModel = ko.observable(null);
 
+        this.canAddToSidebar = (window.sidebar & window.sidebar.addPanel)
+            || /Firefox/.test(navigator.userAgent)
+            || /Vivaldi/.test(navigator.userAgent);
+
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
         this.defaultLatitude = ko.observable(null);
@@ -46,6 +50,16 @@ class WeatherViewModel {
         this.hourlyForecast = ko.observableArray();
 
         this.loadSettings();
+    }
+
+    addToSidebar() {
+        if (window.sidebar && window.sidebar.addPanel) {
+            window.sidebar.addPanel(document.title, location.href, "");
+        } else if (/Firefox/.test(navigator.userAgent)) {
+            window.open("https://www.howtogeek.com/251625/how-to-load-a-website-in-firefoxs-sidebar/");
+        } else if (/Vivaldi/.test(navigator.userAgent)) {
+            window.open("https://help.vivaldi.com/article/web-panels/");
+        }
     }
 
     // Loads and applies new settings from HTML local storage.
@@ -82,6 +96,8 @@ class WeatherViewModel {
     // Updates the location to use for forecasting, using either the actual
     // current location or the default defined in the settings.
     async update(force) {
+        this.error(null);
+
         let coords;
         try {
             if (!this.useGeolocation()) throw "Geolocation is turned off.";
