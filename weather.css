@@ -21,9 +21,6 @@ h1 {
     max-width: 144px;
 }
 
-#setup label {
-}
-
 label.latlng {
     line-height: 26px;
     text-align: left;
@@ -40,6 +37,10 @@ label.latlng input {
 
 #setup > button {
     margin: auto;
+}
+
+#mapLink {
+    white-space: nowrap;
 }
 
 #alerts > * {
@@ -91,4 +92,22 @@ table#hourly .icon {
 
 table#hourly .summary {
     text-align: left;
+}
+
+@media screen and (max-width: 400px) {
+    #addToSidebar {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 235px) {
+    table#hourly .summary {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 180px) {
+    table#hourly .precipProbability {
+        display: none;
+    }
 }
