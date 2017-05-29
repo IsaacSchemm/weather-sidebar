@@ -36,18 +36,28 @@ class WeatherViewModel {
     // Loads and applies new settings from HTML local storage.
     loadSettings() {
         try {
+            let clockSettingsChanged = false;
             let json = localStorage.getItem("settings");
             if (json != null) {
                 let settings = JSON.parse(json);
 
-                this.twelveHourTime(settings.twelveHourTime);
-                this.useLocationTime(settings.useLocationTime);
+                // Clock settings
+                if (this.twelveHourTime() != settings.twelveHourTime) {
+                    this.twelveHourTime(settings.twelveHourTime);
+                    clockSettingsChanged = true;
+                }
+                if (this.useLocationTime() != settings.useLocationTime) {
+                    this.useLocationTime(settings.useLocationTime);
+                    clockSettingsChanged = true;
+                }
+
+                // Location settings
                 this.defaultLatitude(settings.latitude);
                 this.defaultLongitude(settings.longitude);
                 this.useGeolocation(settings.useGeolocation);
             }
 
-            this.update();
+            this.update(clockSettingsChanged ? true : false);
         } catch (e) {
             console.error(e);
             this.error("Could not load settings.");
@@ -68,7 +78,7 @@ class WeatherViewModel {
 
     // Updates the location to use for forecasting, using either the actual
     // current location or the default defined in the settings.
-    async update() {
+    async update(force) {
         let coords;
         try {
             let location = await this.getCurrentPosition();
@@ -86,7 +96,7 @@ class WeatherViewModel {
             longitude: +coords.longitude.toFixed(3)
         };
 
-        if (coords.latitude == this.currentLatitude() && coords.longitude == this.currentLongitude()) {
+        if (!force && coords.latitude == this.currentLatitude() && coords.longitude == this.currentLongitude()) {
             console.log("Same location")
             return;
         }
@@ -128,12 +138,15 @@ class WeatherViewModel {
             let timezone = this.useLocationTime()
                 ? data.timezone
                 : moment.tz.guess();
+            let format = this.twelveHourTime()
+                ? "h:mm A"
+                : "H:mm";
 
             this.alerts([]);
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
-                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format("h:mm A")})`
+                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format(format)})`
                 }
                 this.alerts.push({
                         title: title,
@@ -142,7 +155,7 @@ class WeatherViewModel {
                 });
             }
 
-            this.time(moment.tz(data.currently.time * 1000, timezone).format("h:mm A z"));
+            this.time(moment.tz(data.currently.time * 1000, timezone).format(format + " z"));
             this.temperature(Math.round(data.currently.temperature) + String.fromCodePoint(0xB0));
             this.description(data.currently.summary);
 
@@ -173,11 +186,11 @@ class WeatherViewModel {
                 })();
                 icon += String.fromCodePoint(0xFE0F);
                 this.hourlyForecast.push({
-                        time: moment.tz(h.time * 1000, timezone).format("h:mm A"),
-                        temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
-                        icon: icon,
-                        summary: h.summary,
-                        precipProbability: Math.round(h.precipProbability * 100) + "%"
+                    time: moment.tz(h.time * 1000, timezone).format(format),
+                    temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
+                    icon: icon,
+                    summary: h.summary,
+                    precipProbability: Math.round(h.precipProbability * 100) + "%"
                 });
             }
         } catch (e) {
