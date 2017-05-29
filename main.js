@@ -181,7 +181,7 @@ class WeatherViewModel {
                 });
             }
 
-            this.time(moment.tz(data.currently.time * 1000, timezone).format(format + " z"));
+            this.time("Last updated: " + moment.tz(data.currently.time * 1000, timezone).format(format + " z"));
             this.temperature(Math.round(data.currently.temperature) + String.fromCodePoint(0xB0));
             this.description(data.currently.summary);
 

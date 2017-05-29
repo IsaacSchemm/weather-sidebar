@@ -40,7 +40,7 @@ body.modern button {
     font: -moz-window;
 }
 
-button:hover:active {
+body.modern button:hover:active {
     -moz-border-top-colors: transparent transparent transparent #000000 #8290A5 #899AAC;
     -moz-border-right-colors: transparent transparent transparent #000000 #8290A5 #899AAC;
     -moz-border-bottom-colors: transparent transparent transparent #000000 #8290A5 #899AAC;

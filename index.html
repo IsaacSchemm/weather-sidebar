@@ -60,20 +60,21 @@
         </div>
     </div>
     <div id="weather" style="display: none" data-bind="if: !settingsModel()">
-        <div data-bind="text: error"></div>
+        <div data-bind="text: error"></div> 
         <div data-bind="if: currentLatitude() && currentLongitude()">
             Your location:
             <a id="mapLink" href="#" target="_blank" data-bind="attr: { href: mapLink }">
                 <span data-bind="text: currentLatitudeDisplay"></span>,
                 <span data-bind="text: currentLongitudeDisplay"></span>
             </a>
-            <hr />
         </div>
+        <hr />
         <div id="alerts" data-bind="foreach: alerts">
             <div data-bind="attr: { class: severity }">
                 <a href="#" target="_blank" data-bind="text: title, attr: { href: uri }"></a>
             </div>
         </div>
+        <button data-bind="click: updateForecast">Refresh</button>
         <!-- ko if: temperature() != null -->
         <div id="currentTime" data-bind="text: time">
             12:00 PM

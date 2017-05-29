@@ -15,5 +15,11 @@ body.native {
     background-color: ThreeDFace;
     color: ButtonText;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 12px;
+    font: -moz-window;
+}
+
+body.native button {
+    font-size: 12px;
     font: -moz-window;
 }
