@@ -1,39 +1,39 @@
-﻿html {
+﻿body.compact-dark {
     font-size: 12px;
-}
-
-body {
     background-color: #393f4c;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-a {
+body.compact-dark a {
     color: white;
 }
 
-hr {
+body.compact-dark hr {
     border: 0;
     border-top: 1px solid #1f222a;
 }
 
-input, button {
+body.compact-dark input,
+body.compact-dark select,
+body.compact-dark button {
     border: 1px solid #1d2328;
     margin: 0 3px;
+    font-size: 12px;
 }
 
-input {
+body.compact-dark input,
+body.compact-dark select {
     background-color: #171b1f;
     color: white;
 }
 
-button {
+body.compact-dark button {
     background-color: transparent;
     color: white;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 12px;
 }
 
-button:hover, button:active {
+body.compact-dark button:hover, button:active {
     background-color: #1e262c;
 }

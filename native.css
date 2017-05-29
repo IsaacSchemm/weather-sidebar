@@ -1,17 +1,17 @@
-﻿h1 {
+﻿body.native h1 {
     font: -moz-window;
     font-weight: bold;
     font-size: 16px;
 }
 
-hr {
+body.native hr {
     border-top: 1px solid threedshadow;
     border-bottom: 1px solid threedhighlight;
     border-left: 0;
     border-right: 0;
 }
 
-body {
+body.native {
     background-color: ThreeDFace;
     color: ButtonText;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;

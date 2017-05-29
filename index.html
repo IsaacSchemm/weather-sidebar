@@ -5,9 +5,9 @@
     <meta charset="utf-8" />
     <title>Weather</title>
     <link rel="stylesheet" href="weather.css" type="text/css" />
-    <link rel="stylesheet" href="native.css" type="text/css" title="Native" />
-    <link rel="stylesheet alternate" href="compact-dark.css" type="text/css" title="Compact Dark" />
-    <link rel="stylesheet alternate" href="compact-light.css" type="text/css" title="Compact Light" />
+    <link rel="stylesheet" href="native.css" type="text/css" />
+    <link rel="stylesheet" href="compact-dark.css" type="text/css" />
+    <link rel="stylesheet" href="compact-light.css" type="text/css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
@@ -27,7 +27,7 @@
         }
     </script>
 </head>
-<body>
+<body data-bind="attr: { class: theme }">
     <noscript>
         This page requires JavaScript to be enabled.
     </noscript>
@@ -41,6 +41,15 @@
         <label data-bind="text: locationMessage"></label>
         <button id="getCurrentLocation" data-bind="click: getCurrentLocation">Detect</button>
         <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Use my current location instead if possible</label>
+        <hr />
+        <label>
+            Theme:
+            <select data-bind="value: theme">
+                <option value="native">Native</option>
+                <option value="compact-light">Compact Light</option>
+                <option value="compact-dark">Compact Dark</option>
+            </select>
+        </label>
         <hr />
         <div>
             <button id="resetSettings" data-bind="click: resetSettings">Reset</button>

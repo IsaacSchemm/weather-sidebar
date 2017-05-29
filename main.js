@@ -28,6 +28,7 @@ class WeatherViewModel {
         this.defaultLatitude = ko.observable(null);
         this.defaultLongitude = ko.observable(null);
         this.useGeolocation = ko.observable(true);
+        this.theme = ko.observable("compact-light");
 
         this.error = ko.observable(null);
 
@@ -84,6 +85,8 @@ class WeatherViewModel {
                 this.defaultLatitude(settings.latitude);
                 this.defaultLongitude(settings.longitude);
                 this.useGeolocation(settings.useGeolocation);
+
+                this.theme(settings.theme || "compact-light");
             }
 
             this.update(clockSettingsChanged ? true : false);
@@ -242,6 +245,9 @@ class SettingsViewModel {
         this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
         this.useGeolocation = ko.observable(parent.useGeolocation());
 
+        // By using the same observable, the theme will update instantly
+        this.theme = parent.theme;
+
         this.locationMessage = ko.observable("");
     }
 
@@ -278,7 +284,8 @@ class SettingsViewModel {
             useLocationTime: !!this.useLocationTime(),
             latitude: normalizeNumber(this.latitude()),
             longitude: normalizeNumber(this.longitude()),
-            useGeolocation: !!this.useGeolocation()
+            useGeolocation: !!this.useGeolocation(),
+            theme: this.theme()
         }
         localStorage.setItem("settings", JSON.stringify(settings));
         this.parent.settingsModel(null);
