@@ -126,8 +126,8 @@ class WeatherViewModel {
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
-                    title += ` (until ${new Date(a.expires * 1000).toLocaleString()})`
-            }
+                    title += ` (until ${moment.tz(a.expires * 1000, data.timezone).format("h:mm A")})`
+                }
                 this.alerts.push({
                         title: title,
                         uri: a.uri,
@@ -166,7 +166,7 @@ class WeatherViewModel {
                 })();
                 icon += String.fromCodePoint(0xFE0F);
                 this.hourlyForecast.push({
-                        time: new Date(h.time * 1000).toLocaleTimeString(),
+                        time: moment.tz(h.time * 1000, data.timezone).format("h:mm A"),
                         temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
                         icon: icon,
                         summary: h.summary,
