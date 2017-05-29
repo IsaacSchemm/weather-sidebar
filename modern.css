@@ -1,0 +1,50 @@
+﻿/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+body.modern h1 {
+    font: -moz-window;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+body.modern hr {
+    border-top: 1px solid #95a0ad;
+    border-bottom: 1px solid #ced6dd;
+    border-left: 0;
+    border-right: 0;
+}
+
+body.modern {
+    background-color: #b9c4d0;
+    color: black;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font: -moz-window;
+}
+
+body.modern button {
+    margin: 2px;
+    border: 6px solid;
+    border-color: transparent;
+    -moz-border-top-colors: transparent transparent transparent #000000 #BBC6D1 #B1BBC9;
+    -moz-border-right-colors: transparent transparent transparent #000000 #A2AEBB #A7B4C1;
+    -moz-border-bottom-colors: transparent transparent transparent #000000 #97A6B6 #9DAAB9;
+    -moz-border-left-colors: transparent transparent transparent #000000 #BBC6D1 #B1BBC9;
+    border-radius: 5px;
+    min-width: 6em;
+    background-color: #AAB6C4;
+    background-clip: padding-box;
+    color: #000000;
+    font-size: 12px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font: -moz-window;
+}
+
+button:hover:active {
+    -moz-border-top-colors: transparent transparent transparent #000000 #8290A5 #899AAC;
+    -moz-border-right-colors: transparent transparent transparent #000000 #8290A5 #899AAC;
+    -moz-border-bottom-colors: transparent transparent transparent #000000 #8290A5 #899AAC;
+    -moz-border-left-colors: transparent transparent transparent #000000 #8290A5 #899AAC;
+    background-color: #90A1B3;
+    color: #FFFFFF;
+}

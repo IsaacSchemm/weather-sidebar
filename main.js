@@ -19,7 +19,7 @@ class WeatherViewModel {
     constructor() {
         this.settingsModel = ko.observable(null);
 
-        this.canAddToSidebar = (window.sidebar & window.sidebar.addPanel)
+        this.canAddToSidebar = (window.sidebar && window.sidebar.addPanel)
             || /Firefox/.test(navigator.userAgent)
             || /Vivaldi/.test(navigator.userAgent);
 

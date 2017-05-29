@@ -69,6 +69,7 @@
     <Content Include="compact-dark.css" />
     <Content Include="compact-light.css" />
     <Content Include="main.js" />
+    <Content Include="modern.css" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
