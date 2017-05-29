@@ -112,7 +112,15 @@ class WeatherViewModel {
                 } catch (e) { }
             }
             console.log(data);
-            if (data == null) return;
+            if (data != null) {
+                localStorage.setItem("lastForecastData", JSON.stringify(data));
+            } else {
+                this.error("Could not load data from the proxy");
+                let lastDataStr = localStorage.getItem("lastForecastData");
+                if (!lastDataStr) return;
+                
+                data = JSON.parse(lastDataStr);
+            }
 
             this.alerts([]);
             for (let a of data.alerts || []) {
@@ -127,7 +135,7 @@ class WeatherViewModel {
                 });
             }
 
-            this.time(new Date(data.currently.time * 1000).toLocaleTimeString());
+            this.time(moment.tz(data.currently.time * 1000, data.timezone).format("h:mm A z"));
             this.temperature(Math.round(data.currently.temperature) + String.fromCodePoint(0xB0));
             this.description(data.currently.summary);
 

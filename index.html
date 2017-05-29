@@ -10,12 +10,20 @@
     <link rel="stylesheet alternate" href="compact-light.css" type="text/css" title="Compact Light" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js" integrity="sha256-+5qLxtbk4c2md6Wr70zMmahTHwH+CoFueQVQcRRSusg=" crossorigin="anonymous"></script>
     <script src="main.js"></script>
     <script type="text/javascript">
-        $(() => {
-            var viewModel = new WeatherViewModel();
-            ko.applyBindings(viewModel, document.body);
-        });
+        if (!window.$) {
+            window.onload = () => {
+                document.body.innerHTML = "Could not load required scripts.";
+            }
+        } else {
+            $(() => {
+                var viewModel = new WeatherViewModel();
+                ko.applyBindings(viewModel, document.body);
+            });
+        }
     </script>
 </head>
 <body>
