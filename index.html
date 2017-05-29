@@ -22,19 +22,21 @@
             $(() => {
                 var viewModel = new WeatherViewModel();
                 ko.applyBindings(viewModel, document.body);
+                $("#setup, #weather").show();
             });
         }
     </script>
 </head>
 <body>
-    <div id="setup" data-bind="with: settingsModel">
+    <div id="setup" style="display: none" data-bind="with: settingsModel">
         <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
         <label><input id="useLocationTime" data-bind="checked: useLocationTime" type="checkbox" /> Use the chosen location's time zone</label>
         <hr />
         <label>Default location</label>
         <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="number" step="any" /></label>
         <label class="latlng">Longitude: <input id="longitude" data-bind="value: longitude" type="number" step="any" /></label>
-        <button id="getCurrentLocation">Detect</button>
+        <label data-bind="text: locationMessage"></label>
+        <button id="getCurrentLocation" data-bind="click: getCurrentLocation">Detect</button>
         <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Use my current location instead if possible</label>
         <hr />
         <div>
@@ -43,7 +45,7 @@
             <button id="saveSettings" data-bind="click: saveSettings">Save</button>
         </div>
     </div>
-    <div id="weather" data-bind="if: !settingsModel()">
+    <div id="weather" style="display: none" data-bind="if: !settingsModel()">
         <div data-bind="text: error"></div>
         <div data-bind="if: currentLatitude() && currentLongitude()">
             Your location:
@@ -58,12 +60,6 @@
                 <a href="#" target="_blank" data-bind="text: title, attr: { href: uri }"></a>
             </div>
         </div>
-        <!-- ko if: temperature() == null && useGeolocation() -->
-        <div>The weather sidebar is configured to use your current location. Please accept the prompt above (if any).</div>
-        <!-- /ko -->
-        <!-- ko if: temperature() == null && !useGeolocation() -->
-        <div>Loading...</div>
-        <!-- /ko -->
         <!-- ko if: temperature() != null -->
         <div id="currentTime" data-bind="text: time">
             12:00 PM

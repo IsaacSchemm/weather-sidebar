@@ -22,10 +22,10 @@ h1 {
 }
 
 #setup label {
-    line-height: 26px;
 }
 
 label.latlng {
+    line-height: 26px;
     text-align: left;
     width: 144px;
     margin: auto;

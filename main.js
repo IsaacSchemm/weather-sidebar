@@ -1,5 +1,20 @@
 ﻿"use strict";
 
+// Returns a Promise that resolves to the current coordinates or gets
+// rejected if the current position cannot be determined.
+function getCurrentCoords() {
+    return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+            reject();
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(loc => resolve({
+            latitude: +loc.coords.latitude.toFixed(3),
+            longitude: +loc.coords.longitude.toFixed(3)
+        }), reject);
+    });
+}
+
 class WeatherViewModel {
     constructor() {
         this.settingsModel = ko.observable(null);
@@ -64,30 +79,22 @@ class WeatherViewModel {
         }
     }
 
-    // Returns a Promise that resolves to the current position or gets
-    // rejected if the current position cannot be determined.
-    getCurrentPosition() {
-        return new Promise((resolve, reject) => {
-            if (!this.useGeolocation() || !navigator.geolocation) {
-                reject();
-                return;
-            }
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-        });
-    }
-
     // Updates the location to use for forecasting, using either the actual
     // current location or the default defined in the settings.
     async update(force) {
         let coords;
         try {
-            let location = await this.getCurrentPosition();
-            coords = location.coords;
+            if (!this.useGeolocation()) throw "Geolocation is turned off.";
+            coords = await getCurrentCoords();
         } catch (e) {
             coords = {
                 latitude: this.defaultLatitude(),
                 longitude: this.defaultLongitude()
             };
+            if (coords.latitude == null || coords.longitude == null) {
+                this.error("No default latitude/longitude is defined in the settings.");
+                return;
+            }
         }
 
         // Limit precision of numbers to avoid unnecessary reloads of forecast
@@ -218,6 +225,20 @@ class SettingsViewModel {
         this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
         this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
         this.useGeolocation = ko.observable(parent.useGeolocation());
+
+        this.locationMessage = ko.observable("");
+    }
+
+    async getCurrentLocation() {
+        this.locationMessage("Loading...");
+        try {
+            let coords = await getCurrentCoords();
+            this.latitude(coords.latitude);
+            this.longitude(coords.longitude);
+        } catch (e) {
+            alert("Could not detect your current location.");
+        }
+        this.locationMessage("");
     }
 
     resetSettings() {
