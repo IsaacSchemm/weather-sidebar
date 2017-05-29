@@ -220,6 +220,17 @@ class SettingsViewModel {
         this.useGeolocation = ko.observable(parent.useGeolocation());
     }
 
+    resetSettings() {
+        if (confirm("Are you sure you want to clear these settings?")) {
+            localStorage.removeItem("settings");
+            location.href = location.href;
+        }
+    }
+
+    cancel() {
+        this.parent.settingsModel(null);
+    }
+
     saveSettings() {
         let normalizeNumber = s => {
             if (s == null || s == "") return null;

@@ -38,8 +38,7 @@ label.latlng input {
     float: right;
 }
 
-button#getCurrentLocation,
-button#saveSettings {
+#setup > button {
     margin: auto;
 }
 

@@ -37,7 +37,11 @@
         <button id="getCurrentLocation">Detect</button>
         <label><input id="useGeolocation" data-bind="checked: useGeolocation" type="checkbox" /> Use my current location instead if possible</label>
         <hr />
-        <button id="saveSettings" data-bind="click: saveSettings">Save settings</button>
+        <div>
+            <button id="resetSettings" data-bind="click: resetSettings">Reset</button>
+            <button id="cancel" data-bind="click: saveSettings">Cancel</button>
+            <button id="saveSettings" data-bind="click: saveSettings">Save</button>
+        </div>
     </div>
     <div id="weather" data-bind="if: !settingsModel()">
         <div data-bind="text: error"></div>
