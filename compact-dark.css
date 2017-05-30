@@ -34,6 +34,7 @@ body.compact-dark button {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-body.compact-dark button:hover, button:active {
+body.compact-dark button:hover,
+body.compact-dark button:active {
     background-color: #1e262c;
 }

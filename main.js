@@ -1,7 +1,9 @@
 ﻿"use strict";
 
 // Returns a Promise that resolves to the current coordinates or gets
-// rejected if the current position cannot be determined.
+// rejected if the current position cannot be determined. Coordinates are
+// limited in precision to avoid unnecessary weather lookups due to small
+// variations.
 function getCurrentCoords() {
     return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
@@ -23,6 +25,7 @@ class WeatherViewModel {
             || /Firefox/.test(navigator.userAgent)
             || /Vivaldi/.test(navigator.userAgent);
 
+        // Settings
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
         this.defaultLatitude = ko.observable(null);
@@ -32,14 +35,20 @@ class WeatherViewModel {
 
         this.error = ko.observable(null);
 
+        // Weather information
         this.alerts = ko.observableArray();
         this.time = ko.observable(null);
         this.temperature = ko.observable(null);
         this.description = ko.observable(null);
 
+        // Weather forecast
+        this.hourlyForecast = ko.observableArray();
+
+        // Coordinates used for the weather forecast - can come from settings or geolocation API
         this.currentLatitude = ko.observable(null);
         this.currentLongitude = ko.observable(null);
 
+        // Display a Google Maps link to show the current location (since we don't have a geocode API)
         const deg = String.fromCodePoint(0xB0);
         this.currentLatitudeDisplay = ko.pureComputed(() =>
             `${Math.abs(this.currentLatitude() || 0)}${deg} ${this.currentLatitude > 0 ? "N" : "S"}`);
@@ -48,8 +57,7 @@ class WeatherViewModel {
         this.mapLink = ko.pureComputed(() =>
             `https://www.google.com/maps/preview/@${this.currentLatitude()},${this.currentLongitude()},11z`);
 
-        this.hourlyForecast = ko.observableArray();
-
+        // Populate settings and load weather information
         this.loadSettings();
     }
 
@@ -89,6 +97,8 @@ class WeatherViewModel {
                 this.theme(settings.theme || "compact-light");
             }
 
+            // If one of the time display settings changed, we'll want to refresh.
+            // Otherwise, we only need to refresh if our location has changed.
             this.update(clockSettingsChanged ? true : false);
         } catch (e) {
             console.error(e);
@@ -103,9 +113,12 @@ class WeatherViewModel {
 
         let coords;
         try {
+            // If the user has turned off geolocation, don't try to use it.
             if (!this.useGeolocation()) throw "Geolocation is turned off.";
+            // Otherwise, ask for permission through the browser.
             coords = await getCurrentCoords();
         } catch (e) {
+            // Use the coordinates from the settings.
             coords = {
                 latitude: this.defaultLatitude(),
                 longitude: this.defaultLongitude()
@@ -116,14 +129,8 @@ class WeatherViewModel {
             }
         }
 
-        // Limit precision of numbers to avoid unnecessary reloads of forecast
-        coords = {
-            latitude: +coords.latitude.toFixed(3),
-            longitude: +coords.longitude.toFixed(3)
-        };
-
         if (!force && coords.latitude == this.currentLatitude() && coords.longitude == this.currentLongitude()) {
-            console.log("Same location")
+            console.log("Same location, not updating weather");
             return;
         }
 
@@ -134,32 +141,24 @@ class WeatherViewModel {
 
     // Updates the forecast information.
     async updateForecast() {
-        try {
-            if (this.currentLatitude() == null || this.currentLongitude() == null) {
-                this.time(null);
-                this.temperature(null);
-                this.description(null);
-                this.hourlyForecast([]);
-                return;
-            }
+        this.error(null);
 
+        try {
             let data = null;
             for (let proxyPage of ["proxy.php", "proxy.ashx"]) {
                 try {
                     data = await $.getJSON(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}`);
-                } catch (e) { }
+                } catch (e) {
+                    console.warn(e);
+                }
             }
-            console.log(data);
 
-            if (data != null) {
-                localStorage.setItem("lastForecastData", JSON.stringify(data));
-            } else {
+            if (data == null) {
                 this.error("Could not load data from the proxy");
-                let lastDataStr = localStorage.getItem("lastForecastData");
-                if (!lastDataStr) return;
-                
-                data = JSON.parse(lastDataStr);
+                return;
             }
+
+            console.log(data);
 
             let timezone = this.useLocationTime()
                 ? data.timezone
@@ -175,9 +174,9 @@ class WeatherViewModel {
                     title += ` (until ${moment.tz(a.expires * 1000, timezone).format(format)})`
                 }
                 this.alerts.push({
-                        title: title,
-                        uri: a.uri,
-                        severity: a.severity
+                    title: title,
+                    uri: a.uri,
+                    severity: a.severity
                 });
             }
 
@@ -187,6 +186,7 @@ class WeatherViewModel {
 
             this.hourlyForecast([]);
             for (let h of data.hourly.data.slice(0, 12)) {
+                // Use an anonymous function to map an icon name to a Unicode icon
                 let icon = (() => {
                     switch (h.icon) {
                         case "clear-day":
@@ -210,7 +210,10 @@ class WeatherViewModel {
                             return "";
                 }
                 })();
+                
+                // Display as emoji if possible
                 icon += String.fromCodePoint(0xFE0F);
+
                 this.hourlyForecast.push({
                     time: moment.tz(h.time * 1000, timezone).format(format),
                     temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
@@ -234,6 +237,7 @@ class SettingsViewModel {
     constructor(parent) {
         this.parent = parent;
 
+        // Coordinated converted to string (or empty string) for input box
         let numberToString = i => {
             if (i == null) return "";
             else return `${i}`;
@@ -275,6 +279,7 @@ class SettingsViewModel {
     }
 
     saveSettings() {
+        // Coordinates are saved in settings as number or null
         let normalizeNumber = s => {
             if (s == null || s == "") return null;
             else return +s;
