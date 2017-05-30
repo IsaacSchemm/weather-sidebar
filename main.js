@@ -21,10 +21,6 @@ class WeatherViewModel {
     constructor() {
         this.settingsModel = ko.observable(null);
 
-        this.canAddToSidebar = (window.sidebar && window.sidebar.addPanel)
-            || /Firefox/.test(navigator.userAgent)
-            || /Vivaldi/.test(navigator.userAgent);
-
         // Settings
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
@@ -68,6 +64,8 @@ class WeatherViewModel {
             window.open("https://www.howtogeek.com/251625/how-to-load-a-website-in-firefoxs-sidebar/");
         } else if (/Vivaldi/.test(navigator.userAgent)) {
             window.open("https://help.vivaldi.com/article/web-panels/");
+        } else {
+            alert("It doesn't look like your browser has a feature to put web pages in the sidebar.");
         }
     }
 
