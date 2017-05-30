@@ -353,3 +353,7 @@ class SettingsViewModel {
         this.parent.loadSettings();
     }
 }
+
+interface StringConstructor {
+    fromCodePoint(codePoint: number): string;
+}
