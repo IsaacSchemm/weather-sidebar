@@ -91,9 +91,9 @@ class WeatherViewModel {
         // Display a Google Maps link to show the current location (since we don't have a geocode API)
         const deg = String.fromCodePoint(0xB0);
         this.currentLatitudeDisplay = ko.pureComputed(() =>
-            `${Math.abs(this.currentLatitude() || 0)}${deg} ${this.currentLatitude > 0 ? "N" : "S"}`);
+            `${Math.abs(this.currentLatitude() || 0)}${deg} ${this.currentLatitude() > 0 ? "N" : "S"}`);
         this.currentLongitudeDisplay = ko.pureComputed(() =>
-            `${Math.abs(this.currentLongitude() || 0)}${deg} ${this.currentLongitude > 0 ? "E" : "W"}`);
+            `${Math.abs(this.currentLongitude() || 0)}${deg} ${this.currentLongitude() > 0 ? "E" : "W"}`);
         this.mapLink = ko.pureComputed(() =>
             `https://www.google.com/maps/preview/@${this.currentLatitude()},${this.currentLongitude()},11z`);
 
