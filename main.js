@@ -145,7 +145,9 @@ class WeatherViewModel {
             let data = null;
             for (let proxyPage of ["proxy.php", "proxy.ashx"]) {
                 try {
-                    data = await $.getJSON(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}`);
+                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}`);
+                    if (!response.ok) throw new Error(`Request to ${proxyPage} returned status ${response.status}`);
+                    data = await response.json();
                 } catch (e) {
                     console.warn(e);
                 }
