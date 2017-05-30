@@ -1,11 +1,16 @@
-﻿"use strict";
+﻿declare function fetch(url: string): Promise<any>;
+declare var ko: any;
+declare var moment: any;
 
 // Returns a Promise that resolves to the current coordinates or gets
 // rejected if the current position cannot be determined. Coordinates are
 // limited in precision to avoid unnecessary weather lookups due to small
 // variations.
 function getCurrentCoords() {
-    return new Promise((resolve, reject) => {
+    return new Promise<{
+        latitude: number;
+        longitude: number;
+    }>((resolve, reject) => {
         if (!navigator.geolocation) {
             reject();
             return;
@@ -17,7 +22,46 @@ function getCurrentCoords() {
     });
 }
 
+interface IAlert {
+    title: string;
+    uri: string;
+    severity: string;
+}
+
+interface IForecast {
+    time: string;
+    temp: string;
+    icon: string;
+    summary: string;
+    precipProbability: string;
+}
+
 class WeatherViewModel {
+    readonly settingsModel;
+
+    readonly twelveHourTime;
+    readonly useLocationTime;
+    readonly defaultLatitude;
+    readonly defaultLongitude;
+    readonly useGeolocation;
+    readonly theme;
+
+    readonly error;
+
+    readonly alerts;
+    readonly time;
+    readonly temperature;
+    readonly description;
+
+    readonly hourlyForecast;
+
+    readonly currentLatitude;
+    readonly currentLongitude;
+
+    readonly currentLatitudeDisplay;
+    readonly currentLongitudeDisplay;
+    readonly mapLink;
+
     constructor() {
         this.settingsModel = ko.observable(null);
 
@@ -58,8 +102,8 @@ class WeatherViewModel {
     }
 
     addToSidebar() {
-        if (window.sidebar && window.sidebar.addPanel) {
-            window.sidebar.addPanel(document.title, location.href, "");
+        if (window["sidebar"] && window["sidebar"].addPanel) {
+            window["sidebar"].addPanel(document.title, location.href, "");
         } else if (/Firefox/.test(navigator.userAgent)) {
             window.open("https://www.howtogeek.com/251625/how-to-load-a-website-in-firefoxs-sidebar/");
         } else if (/Vivaldi/.test(navigator.userAgent)) {
@@ -234,6 +278,18 @@ class WeatherViewModel {
 }
 
 class SettingsViewModel {
+    readonly parent: WeatherViewModel;
+
+    readonly twelveHourTime;
+    readonly useLocationTime;
+    readonly latitude;
+    readonly longitude;
+    readonly useGeolocation;
+
+    readonly theme;
+
+    readonly locationMessage;
+
     constructor(parent) {
         this.parent = parent;
 
@@ -259,8 +315,8 @@ class SettingsViewModel {
         this.locationMessage("Loading...");
         try {
             let coords = await getCurrentCoords();
-            this.latitude(coords.latitude);
-            this.longitude(coords.longitude);
+            this.latitude(coords.latitude + "");
+            this.longitude(coords.longitude + "");
         } catch (e) {
             alert("Could not detect your current location.");
         }
