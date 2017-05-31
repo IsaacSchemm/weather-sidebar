@@ -5,7 +5,7 @@
 }
 
 hr {
-    max-width: calc(100% - 32px);
+    max-width: calc(100% - 1em);
 }
 
 h1 {

@@ -60,11 +60,11 @@
         <hr />
         <div>
             <button id="resetSettings" data-bind="click: resetSettings">Reset</button>
-            <button id="cancel" data-bind="click: saveSettings">Cancel</button>
+            <button id="cancel" data-bind="click: cancel">Cancel</button>
             <button id="saveSettings" data-bind="click: saveSettings">Save</button>
         </div>
     </div>
-    <div id="weather" style="display: none" data-bind="if: !settingsModel()">
+    <div id="weather" style="display: none" data-bind="if: !settingsModel() && !aboutShown()">
         <div data-bind="text: error"></div> 
         <div data-bind="if: currentLatitude() && currentLongitude()">
             Your location:
@@ -109,10 +109,30 @@
         <div>
             <a href="#" data-bind="click: addToSidebar" id="addToSidebar">Add to sidebar</a>
         </div>
+        <div>
+            <a href="#" data-bind="click: showAbout">About</a>
+        </div>
         <hr />
         <div>
             <a href="https://darksky.net/poweredby/" target="_blank">Powered by Dark Sky</a>
         </div>
+    </div>
+    <div id="about" data-bind="if: !settingsModel() && aboutShown()">
+        <p><a href="#" data-bind="click: hideAbout">Close</a></p>
+        <h1>Weather Sidebar</h1>
+        <p>
+            &copy; 2017 Isaac Schemm <br />
+            <a target="_blank" href="https://github.com/isaacschemm/weather-sidebar">https://github.com/isaacschemm/weather-sidebar</a> <br />
+            Available under the <a target="_blank" href="COPYING">MIT license.</a>
+        </p>
+        <hr />
+        <p>
+            Requires SeaMonkey 2.49+ / Firefox 52+ or Chrome 55+ / Vivaldi 1.6+ for
+            <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await">async/await</a>
+            and
+            <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch">Fetch API</a>
+            support.
+        </p>
     </div>
 </body>
 </html>

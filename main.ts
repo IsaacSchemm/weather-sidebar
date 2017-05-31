@@ -64,6 +64,7 @@ class WeatherViewModel {
 
     constructor() {
         this.settingsModel = ko.observable(null);
+        this.aboutShown = ko.observable(false);
 
         // Settings
         this.twelveHourTime = ko.observable(true);
@@ -111,6 +112,14 @@ class WeatherViewModel {
         } else {
             alert("It doesn't look like your browser has a feature to put web pages in the sidebar.");
         }
+    }
+
+    showAbout() {
+        this.aboutShown(true);
+    }
+
+    hideAbout() {
+        this.aboutShown(false);
     }
 
     // Loads and applies new settings from HTML local storage.
@@ -332,6 +341,7 @@ class SettingsViewModel {
 
     cancel() {
         this.parent.settingsModel(null);
+        this.parent.loadSettings();
     }
 
     saveSettings() {
