@@ -2,6 +2,10 @@
 declare var ko: any;
 declare var moment: any;
 
+if (!String.fromCodePoint) {
+    String.fromCodePoint = () => "";
+}
+
 // Returns a Promise that resolves to the current coordinates or gets
 // rejected if the current position cannot be determined. Coordinates are
 // limited in precision to avoid unnecessary weather lookups due to small
@@ -38,6 +42,7 @@ interface IForecast {
 
 class WeatherViewModel {
     readonly settingsModel;
+    readonly aboutShown;
 
     readonly twelveHourTime;
     readonly useLocationTime;

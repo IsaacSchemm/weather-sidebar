@@ -71,7 +71,6 @@
     <Content Include="compact-dark.css" />
     <Content Include="compact-light.css" />
     <TypeScriptCompile Include="es2015.promise.d.ts" />
-    <Content Include="fromcodepoint.js" />
     <TypeScriptCompile Include="main.ts" />
     <None Include="COPYING" />
     <Content Include="modern.css" />
