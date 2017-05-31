@@ -35,10 +35,6 @@ label.latlng input {
     float: right;
 }
 
-.license {
-    font-size: 80%;
-}
-
 #setup > button {
     margin: auto;
 }
