@@ -68,6 +68,7 @@
   <ItemGroup>
     <Content Include="compact-dark.css" />
     <Content Include="compact-light.css" />
+    <None Include="COPYING" />
     <Content Include="main.js" />
     <Content Include="modern.css" />
     <Content Include="packages.config" />

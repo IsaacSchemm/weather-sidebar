@@ -5,7 +5,7 @@
 }
 
 hr {
-    max-width: calc(100% - 32px);
+    max-width: calc(100% - 1em);
 }
 
 h1 {
@@ -33,6 +33,10 @@ label.latlng input {
     height: 22px;
     margin: 2px 0;
     float: right;
+}
+
+.license {
+    font-size: 80%;
 }
 
 #setup > button {
