@@ -38,3 +38,8 @@ body.compact-dark button:hover,
 body.compact-dark button:active {
     background-color: #1e262c;
 }
+
+body.compact-dark table#hourly .icon img.emoji {
+   background-color: transparent;
+   border-color: transparent;
+}

@@ -56,6 +56,7 @@
                 <option value="modern">Suite Modern</option>
             </select>
         </label>
+        <label><input id="useGeolocation" data-bind="checked: useTwitterEmoji" type="checkbox" /> Use Twitter emoji (<a target="_blank" href="https://github.com/twitter/twemoji">twemoji</a>)</label>
         <hr />
         <div>
             <button id="resetSettings" data-bind="click: resetSettings">Reset</button>
@@ -95,7 +96,7 @@
             <tr>
                 <td class="time" data-bind="text: time">4:00 AM</td>
                 <td class="temp" data-bind="text: temp">38&deg;</td>
-                <td class="icon" data-bind="text: icon">&#9729;</td>
+                <td class="icon" data-bind="html: icon">&#9729;</td>
                 <td class="summary" data-bind="text: summary">Cloudy</td>
                 <td class="precipProbability" data-bind="text: precipProbability">10%</td>
             </tr>

@@ -6,15 +6,15 @@ if (!String.fromCodePoint) {
     String.fromCodePoint = () => "";
 }
 
-// Returns a Promise that resolves to the current coordinates or gets
-// rejected if the current position cannot be determined. Coordinates are
-// limited in precision to avoid unnecessary weather lookups due to small
-// variations.
-function getCurrentCoords() {
-    return new Promise<{
-        latitude: number;
-        longitude: number;
-    }>((resolve, reject) => {
+function getCurrentCoords(): Promise<{
+    latitude: number;
+    longitude: number;
+}> {
+    // Returns a Promise that resolves to the current coordinates or gets
+    // rejected if the current position cannot be determined. Coordinates are
+    // limited in precision to avoid unnecessary weather lookups due to small
+    // variations.
+    return new Promise((resolve, reject) => {
         if (!navigator.geolocation) {
             reject();
             return;
@@ -40,6 +40,16 @@ interface IForecast {
     precipProbability: string;
 }
 
+function loadScript(src) {
+    return new Promise((resolve, reject) => {
+        const s = document.createElement('script');
+        s.src = src;
+        s.onload = resolve;
+        s.onerror = reject;
+        document.head.appendChild(s);
+    });
+}
+
 class WeatherViewModel {
     readonly settingsModel;
     readonly aboutShown;
@@ -50,6 +60,7 @@ class WeatherViewModel {
     readonly defaultLongitude;
     readonly useGeolocation;
     readonly theme;
+    readonly useTwitterEmoji;
 
     readonly error;
 
@@ -78,6 +89,7 @@ class WeatherViewModel {
         this.defaultLongitude = ko.observable(null);
         this.useGeolocation = ko.observable(true);
         this.theme = ko.observable("compact-light");
+        this.useTwitterEmoji = ko.observable(/Windows NT [456]\..*/.test(navigator.userAgent));
 
         this.error = ko.observable(null);
 
@@ -130,7 +142,7 @@ class WeatherViewModel {
     // Loads and applies new settings from HTML local storage.
     loadSettings() {
         try {
-            let clockSettingsChanged = false;
+            let displaySettingsChanged = false;
             let json = localStorage.getItem("settings");
             if (json != null) {
                 let settings = JSON.parse(json);
@@ -138,24 +150,29 @@ class WeatherViewModel {
                 // Clock settings
                 if (this.twelveHourTime() != settings.twelveHourTime) {
                     this.twelveHourTime(settings.twelveHourTime);
-                    clockSettingsChanged = true;
+                    displaySettingsChanged = true;
                 }
                 if (this.useLocationTime() != settings.useLocationTime) {
                     this.useLocationTime(settings.useLocationTime);
-                    clockSettingsChanged = true;
+                    displaySettingsChanged = true;
+                }
+                if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
+                    this.useTwitterEmoji(settings.useTwitterEmoji);
+                    displaySettingsChanged = true;
                 }
 
                 // Location settings
                 this.defaultLatitude(settings.latitude);
                 this.defaultLongitude(settings.longitude);
                 this.useGeolocation(settings.useGeolocation);
+                this.useTwitterEmoji(settings.useTwitterEmoji);
 
                 this.theme(settings.theme || "compact-light");
             }
 
             // If one of the time display settings changed, we'll want to refresh.
             // Otherwise, we only need to refresh if our location has changed.
-            this.update(clockSettingsChanged ? true : false);
+            this.update(displaySettingsChanged ? true : false);
         } catch (e) {
             console.error(e);
             this.error("Could not load settings.");
@@ -193,6 +210,19 @@ class WeatherViewModel {
         this.currentLatitude(coords.latitude);
         this.currentLongitude(coords.longitude);
         this.updateForecast();
+    }
+
+    async emojiStr(codePoint: number | null) {
+        if (codePoint == null) return "";
+        const str = String.fromCodePoint(codePoint) + String.fromCodePoint(0xFE0F);
+        if (this.useTwitterEmoji()) {
+            if (!window["twemoji"]) {
+                await loadScript("https://twemoji.maxcdn.com/2/twemoji.min.js?2.3.0");
+            }
+            return window["twemoji"].parse(str);
+        } else {
+            return str;
+        }
     }
 
     // Updates the forecast information.
@@ -239,38 +269,36 @@ class WeatherViewModel {
             }
 
             this.time("Last updated: " + moment.tz(data.currently.time * 1000, timezone).format(format + " z"));
-            this.temperature(Math.round(data.currently.temperature) + String.fromCodePoint(0xB0));
+            this.temperature(Math.round(data.currently.temperature) + String.fromCharCode(0xB0));
             this.description(data.currently.summary);
 
             this.hourlyForecast([]);
             for (let h of data.hourly.data.slice(0, 12)) {
                 // Use an anonymous function to map an icon name to a Unicode icon
-                let icon = (() => {
+                const codePoint = (() => {
                     switch (h.icon) {
                         case "clear-day":
                         case "clear-night":
-                            return String.fromCodePoint(9728);
+                            return 9728;
                         case "rain":
-                            return String.fromCodePoint(127783);
+                            return 127783;
                         case "snow":
                         case "sleet":
-                            return String.fromCodePoint(127784);
+                            return 127784;
                         case "wind":
-                            return String.fromCodePoint(128168);
+                            return 128168;
                         case "fog":
-                            return String.fromCodePoint(127787);
+                            return 127787;
                         case "cloudy":
-                            return String.fromCodePoint(9729);
+                            return 9729;
                         case "partly-cloudy-day":
                         case "partly-cloudy-night":
-                            return String.fromCodePoint(9925);
+                            return 9925;
                         default:
-                            return "";
-                }
+                            return null;
+                    }
                 })();
-                
-                // Display as emoji if possible
-                icon += String.fromCodePoint(0xFE0F);
+                const icon = await this.emojiStr(codePoint);
 
                 this.hourlyForecast.push({
                     time: moment.tz(h.time * 1000, timezone).format(format),
@@ -301,6 +329,7 @@ class SettingsViewModel {
     readonly useGeolocation;
 
     readonly theme;
+    readonly useTwitterEmoji;
 
     readonly locationMessage;
 
@@ -318,6 +347,7 @@ class SettingsViewModel {
         this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
         this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
         this.useGeolocation = ko.observable(parent.useGeolocation());
+        this.useTwitterEmoji = ko.observable(parent.useTwitterEmoji());
 
         // By using the same observable, the theme will update instantly
         this.theme = parent.theme;
@@ -361,6 +391,7 @@ class SettingsViewModel {
             latitude: normalizeNumber(this.latitude()),
             longitude: normalizeNumber(this.longitude()),
             useGeolocation: !!this.useGeolocation(),
+            useTwitterEmoji: !!this.useTwitterEmoji(),
             theme: this.theme()
         }
         localStorage.setItem("settings", JSON.stringify(settings));
