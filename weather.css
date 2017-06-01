@@ -94,9 +94,10 @@ table#hourly .icon img.emoji {
    height: 0.8em;
    width: 0.8em;
    vertical-align: -0.1em;
-   background-color: black;
-   border: 0.1em solid black;
-   border-radius: 0.2em;
+   filter: drop-shadow(1px 1px 0 #000) 
+           drop-shadow(-1px 1px 0 #000) 
+           drop-shadow(1px -1px 0 #000) 
+           drop-shadow(-1px -1px 0 #000);
 }
 
 table#hourly .summary {

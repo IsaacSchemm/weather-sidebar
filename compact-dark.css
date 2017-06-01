@@ -40,6 +40,5 @@ body.compact-dark button:active {
 }
 
 body.compact-dark table#hourly .icon img.emoji {
-   background-color: transparent;
-   border-color: transparent;
+   filter: initial;
 }
