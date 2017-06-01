@@ -247,7 +247,7 @@ class WeatherViewModel {
                             return "";
                     }
                 })();
-                const icon = await this.emojiStr(codePoint);
+                const icon = await this.emojiStr([9728, 127783, 127784, 128168, 127787, 9729, 9925][Math.floor(Math.random() * 7)]);
 
                 this.hourlyForecast.push({
                     time: moment.tz(h.time * 1000, timezone).format(format),
