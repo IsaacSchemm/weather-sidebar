@@ -90,6 +90,15 @@ table#hourly .icon {
     font-size: 200%;
 }
 
+table#hourly .icon img.emoji {
+   height: 0.8em;
+   width: 0.8em;
+   vertical-align: -0.1em;
+   background-color: black;
+   border: 0.1em solid black;
+   border-radius: 0.2em;
+}
+
 table#hourly .summary {
     text-align: left;
 }
