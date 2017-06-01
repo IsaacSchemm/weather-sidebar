@@ -16,12 +16,12 @@ at this time. Instead, either use the browser's geolocation support (default)
 or enter your own latitude/longitude in the settings area.
 
 Browser requirements:
-* Firefox 52+
+* Firefox / Pale Moon
   * Add Weather Sidebar to your bookmarks, then edit the bookmark properties
     to open in the sidebar. For more details, see:
 	https://www.howtogeek.com/251625/how-to-load-a-website-in-firefoxs-sidebar
-* SeaMonkey 2.49+
+* SeaMonkey
   * Use Weather Sidebar's "Add to sidebar" link.
-* Vivaldi 1.6+
+* Vivaldi
   * Add Weather Sidebar as a Web Panel
     (https://help.vivaldi.com/article/web-panels).

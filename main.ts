@@ -186,6 +186,10 @@ class WeatherViewModel {
 
         let coords;
         try {
+            if (!window["fetch"]) {
+                await loadScript("https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js");
+            }
+
             // If the user has turned off geolocation, don't try to use it.
             if (!this.useGeolocation()) throw "Geolocation is turned off.";
             // Otherwise, ask for permission through the browser.
