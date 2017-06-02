@@ -240,6 +240,7 @@ class WeatherViewModel {
                     let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}`);
                     if (!response.ok) throw new Error(`Request to ${proxyPage} returned status ${response.status}`);
                     data = await response.json();
+                    if (data) break;
                 } catch (e) {
                     console.warn(e);
                 }
