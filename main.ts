@@ -89,7 +89,12 @@ class WeatherViewModel {
         this.defaultLongitude = ko.observable(null);
         this.useGeolocation = ko.observable(true);
         this.theme = ko.observable("compact-light");
-        this.useTwitterEmoji = ko.observable(/Windows NT [456]\..*/.test(navigator.userAgent));
+        this.useTwitterEmoji = ko.observable(true);
+        if (/(Windows|OS X|iOS|Android)/.test(navigator.userAgent)) {
+            if (!/(Windows NT [456]\.|OS X 10_[0123456]_)/.test(navigator.userAgent)) {
+                this.useTwitterEmoji(false);
+            }
+        }
 
         this.error = ko.observable(null);
 
