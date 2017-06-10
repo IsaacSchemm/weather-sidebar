@@ -102,7 +102,14 @@ class WeatherViewModel {
     loadSettings() {
         try {
             let displaySettingsChanged = false;
-            let json = localStorage.getItem("settings");
+            let json = localStorage.getItem("weather-settings");
+            if (json == null) {
+                json = localStorage.getItem("settings");
+                if (json) {
+                    localStorage.setItem("weather-settings", json);
+                    localStorage.removeItem("settings");
+                }
+            }
             if (json != null) {
                 let settings = JSON.parse(json);
 
@@ -315,7 +322,7 @@ class SettingsViewModel {
 
     resetSettings() {
         if (confirm("Are you sure you want to clear these settings?")) {
-            localStorage.removeItem("settings");
+            localStorage.removeItem("weather-settings");
             location.href = location.href;
         }
     }
@@ -340,7 +347,7 @@ class SettingsViewModel {
             useTwitterEmoji: !!this.useTwitterEmoji(),
             theme: this.theme()
         }
-        localStorage.setItem("settings", JSON.stringify(settings));
+        localStorage.setItem("weather-settings", JSON.stringify(settings));
         this.parent.settingsModel(null);
         this.parent.loadSettings();
     }
