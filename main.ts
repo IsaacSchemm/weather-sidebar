@@ -85,6 +85,7 @@ class WeatherViewModel {
         // Settings
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
+        this.hoursAhead = ko.observable(12);
         this.defaultLatitude = ko.observable(null);
         this.defaultLongitude = ko.observable(null);
         this.useGeolocation = ko.observable(true);
@@ -124,6 +125,10 @@ class WeatherViewModel {
         this.loadSettings();
     }
 
+    openInNewTab() {
+        window.open(location.href, "_blank");
+    }
+
     addToSidebar() {
         if (window["sidebar"] && window["sidebar"].addPanel) {
             window["sidebar"].addPanel(document.title, location.href, "");
@@ -148,9 +153,17 @@ class WeatherViewModel {
     loadSettings() {
         try {
             let displaySettingsChanged = false;
-            let json = localStorage.getItem("settings");
+            let json = localStorage.getItem("weather-settings");
+            if (json == null) {
+                json = localStorage.getItem("settings");
+                if (json) {
+                    localStorage.setItem("weather-settings", json);
+                    localStorage.removeItem("settings");
+                }
+            }
             if (json != null) {
                 let settings = JSON.parse(json);
+                settings.hoursAhead = settings.hoursAhead || 12;
 
                 // Clock settings
                 if (this.twelveHourTime() != settings.twelveHourTime) {
@@ -159,6 +172,10 @@ class WeatherViewModel {
                 }
                 if (this.useLocationTime() != settings.useLocationTime) {
                     this.useLocationTime(settings.useLocationTime);
+                    displaySettingsChanged = true;
+                }
+                if (this.hoursAhead() != settings.hoursAhead) {
+                    this.hoursAhead(settings.hoursAhead);
                     displaySettingsChanged = true;
                 }
                 if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
@@ -283,7 +300,7 @@ class WeatherViewModel {
             this.description(data.currently.summary);
 
             this.hourlyForecast([]);
-            for (let h of data.hourly.data.slice(0, 12)) {
+            for (let h of data.hourly.data.slice(1, this.hoursAhead() + 1)) {
                 // Use an anonymous function to map an icon name to a Unicode icon
                 const codePoint = (() => {
                     switch (h.icon) {
@@ -354,6 +371,7 @@ class SettingsViewModel {
 
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
+        this.hoursAhead = ko.observable(parent.hoursAhead());
         this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
         this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
         this.useGeolocation = ko.observable(parent.useGeolocation());
@@ -379,7 +397,7 @@ class SettingsViewModel {
 
     resetSettings() {
         if (confirm("Are you sure you want to clear these settings?")) {
-            localStorage.removeItem("settings");
+            localStorage.removeItem("weather-settings");
             location.href = location.href;
         }
     }
@@ -398,13 +416,14 @@ class SettingsViewModel {
         let settings = {
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
+            hoursAhead: +this.hoursAhead(),
             latitude: normalizeNumber(this.latitude()),
             longitude: normalizeNumber(this.longitude()),
             useGeolocation: !!this.useGeolocation(),
             useTwitterEmoji: !!this.useTwitterEmoji(),
             theme: this.theme()
         }
-        localStorage.setItem("settings", JSON.stringify(settings));
+        localStorage.setItem("weather-settings", JSON.stringify(settings));
         this.parent.settingsModel(null);
         this.parent.loadSettings();
     }

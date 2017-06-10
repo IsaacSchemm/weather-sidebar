@@ -104,6 +104,12 @@ table#hourly .summary {
     text-align: left;
 }
 
+@media screen and (min-width: 401px) {
+    #openInNewTab {
+        display: none;
+    }
+}
+
 @media screen and (max-width: 400px) {
     #addToSidebar {
         display: none;
