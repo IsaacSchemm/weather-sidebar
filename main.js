@@ -74,6 +74,10 @@ class WeatherViewModel {
         this.loadSettings();
     }
 
+    openInNewTab() {
+        window.open(location.href, "_blank");
+    }
+
     addToSidebar() {
         if (window.sidebar && window.sidebar.addPanel) {
             window.sidebar.addPanel(document.title, location.href, "");
