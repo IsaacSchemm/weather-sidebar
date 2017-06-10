@@ -35,6 +35,7 @@ class WeatherViewModel {
         // Settings
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
+        this.hoursAhead = ko.observable(12);
         this.defaultLatitude = ko.observable(null);
         this.defaultLongitude = ko.observable(null);
         this.useGeolocation = ko.observable(true);
@@ -112,6 +113,7 @@ class WeatherViewModel {
             }
             if (json != null) {
                 let settings = JSON.parse(json);
+                settings.hoursAhead = settings.hoursAhead || 12;
 
                 // Clock settings
                 if (this.twelveHourTime() != settings.twelveHourTime) {
@@ -120,6 +122,10 @@ class WeatherViewModel {
                 }
                 if (this.useLocationTime() != settings.useLocationTime) {
                     this.useLocationTime(settings.useLocationTime);
+                    displaySettingsChanged = true;
+                }
+                if (this.hoursAhead() != settings.hoursAhead) {
+                    this.hoursAhead(settings.hoursAhead);
                     displaySettingsChanged = true;
                 }
                 if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
@@ -239,7 +245,7 @@ class WeatherViewModel {
             this.description(data.currently.summary);
 
             this.hourlyForecast([]);
-            for (let h of data.hourly.data.slice(0, 12)) {
+            for (let h of data.hourly.data.slice(1, this.hoursAhead() + 1)) {
                 // Use an anonymous function to map an icon name to a Unicode icon
                 const codePoint = (() => {
                     switch (h.icon) {
@@ -297,6 +303,7 @@ class SettingsViewModel {
 
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
+        this.hoursAhead = ko.observable(parent.hoursAhead());
         this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
         this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
         this.useGeolocation = ko.observable(parent.useGeolocation());
@@ -341,6 +348,7 @@ class SettingsViewModel {
         let settings = {
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
+            hoursAhead: +this.hoursAhead(),
             latitude: normalizeNumber(this.latitude()),
             longitude: normalizeNumber(this.longitude()),
             useGeolocation: !!this.useGeolocation(),
