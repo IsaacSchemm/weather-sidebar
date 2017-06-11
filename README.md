@@ -32,9 +32,8 @@ Branches
 * *master*: Pure JavaScript, no compilation required.
   Requires [async/await](http://caniuse.com/#feat=async-functions) support in
   the browser.
-* *typescript*: Uses TypeScript to compile async functions into code that only
-  requires Promise callbacks, which expands browser support to pretty much
-  anything that supports localStorage and JSON.
-* *legacy-support*: Adds various polyfills (most of which are loaded only if
-  needed) to provide support for Clasilla and possibly other niche or legacy
-  browsers.
+* *legacy-support*: Uses TypeScript to compile async functions into code that
+  uses Promise callbacks, which expands browser support to pretty much
+  anything that supports localStorage and JSON. Also adds various polyfills 
+  (most of which are loaded only if needed) to provide support for Clasilla
+  and possibly other niche or legacy browsers.
