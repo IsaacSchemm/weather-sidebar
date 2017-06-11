@@ -103,9 +103,9 @@ class WeatherViewModel {
         // Settings
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
-        this.hoursAhead = ko.observable(12);
-        this.defaultLatitude = ko.observable(null);
-        this.defaultLongitude = ko.observable(null);
+        this.hoursAhead = ko.observable(0);
+        this.defaultLatitude = ko.observable("");
+        this.defaultLongitude = ko.observable("");
         this.useGeolocation = ko.observable(true);
         this.theme = ko.observable("compact-light");
         this.useTwitterEmoji = ko.observable(true);
@@ -149,7 +149,7 @@ class WeatherViewModel {
 
     addToSidebar() {
         if (window["sidebar"] && window["sidebar"].addPanel) {
-            window["sidebar"].addPanel(document.title, location.href, "");
+            (window as any).sidebar.addPanel(document.title, location.href, "");
         } else if (/Firefox/.test(navigator.userAgent)) {
             window.open("https://www.howtogeek.com/251625/how-to-load-a-website-in-firefoxs-sidebar/");
         } else if (/Vivaldi/.test(navigator.userAgent)) {
@@ -230,7 +230,10 @@ class WeatherViewModel {
     async update(force) {
         this.error(null);
 
-        let coords;
+        let coords: {
+            latitude: number | string;
+            longitude: number | string;
+        };
         try {
             if (!window["fetch"]) {
                 await loadScript("https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js");
@@ -387,18 +390,12 @@ class SettingsViewModel {
 
     constructor(parent) {
         this.parent = parent;
-
-        // Coordinated converted to string (or empty string) for input box
-        let numberToString = i => {
-            if (i == null) return "";
-            else return `${i}`;
-        };
-
+        
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
         this.hoursAhead = ko.observable(parent.hoursAhead());
-        this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
-        this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
+        this.latitude = ko.observable(parent.defaultLatitude());
+        this.longitude = ko.observable(parent.defaultLongitude());
         this.useGeolocation = ko.observable(parent.useGeolocation());
         this.useTwitterEmoji = ko.observable(parent.useTwitterEmoji());
 
@@ -433,17 +430,13 @@ class SettingsViewModel {
     }
 
     saveSettings() {
-        // Coordinates are saved in settings as number or null
-        let normalizeNumber = s => {
-            if (s == null || s == "") return null;
-            else return +s;
-        };
+        // Coordinates are saved in settings as string
         let settings = {
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
             hoursAhead: +this.hoursAhead(),
-            latitude: normalizeNumber(this.latitude()),
-            longitude: normalizeNumber(this.longitude()),
+            latitude: this.latitude(),
+            longitude: this.longitude(),
             useGeolocation: !!this.useGeolocation(),
             useTwitterEmoji: !!this.useTwitterEmoji(),
             theme: this.theme()
