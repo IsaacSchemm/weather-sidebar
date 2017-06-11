@@ -115,8 +115,8 @@ class WeatherViewModel {
             }
             if (json != null) {
                 let settings = JSON.parse(json);
-                settings.hoursAhead = settings.hoursAhead || 12;
-                settings.daysAhead = settings.daysAhead || 0;
+                if (settings.hoursAhead === undefined) settings.hoursAhead = 12;
+                if (settings.daysAhead === undefined) settings.daysAhead = 0;
 
                 // Clock settings
                 if (this.twelveHourTime() != settings.twelveHourTime) {
