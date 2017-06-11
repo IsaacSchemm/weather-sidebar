@@ -315,18 +315,12 @@ class SettingsViewModel {
     constructor(parent) {
         this.parent = parent;
 
-        // Coordinated converted to string (or empty string) for input box
-        let numberToString = i => {
-            if (i == null) return "";
-            else return `${i}`;
-        };
-
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
         this.hoursAhead = ko.observable(parent.hoursAhead());
         this.daysAhead = ko.observable(parent.daysAhead());
-        this.latitude = ko.observable(numberToString(parent.defaultLatitude()));
-        this.longitude = ko.observable(numberToString(parent.defaultLongitude()));
+        this.latitude = ko.observable(parent.defaultLatitude());
+        this.longitude = ko.observable(parent.defaultLongitude());
         this.useGeolocation = ko.observable(parent.useGeolocation());
         this.useTwitterEmoji = ko.observable(parent.useTwitterEmoji());
 
@@ -361,18 +355,13 @@ class SettingsViewModel {
     }
 
     saveSettings() {
-        // Coordinates are saved in settings as number or null
-        let normalizeNumber = s => {
-            if (s == null || s == "") return null;
-            else return +s;
-        };
         let settings = {
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
             hoursAhead: +this.hoursAhead(),
             daysAhead: +this.daysAhead(),
-            latitude: normalizeNumber(this.latitude()),
-            longitude: normalizeNumber(this.longitude()),
+            latitude: this.latitude(),
+            longitude: this.longitude(),
             useGeolocation: !!this.useGeolocation(),
             useTwitterEmoji: !!this.useTwitterEmoji(),
             theme: this.theme()
