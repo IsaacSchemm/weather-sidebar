@@ -69,28 +69,28 @@ label.latlng input {
     font-size: 400%;
 }
 
-table#hourly {
+table {
     display: inline-table;
 }
 
-table#hourly td {
+table td {
     padding: 0 4px;
 }
 
-table#hourly .time {
+table .time {
     text-align: right;
 }
 
-table#hourly .temp {
+table .temp {
     font-size: 150%;
     font-weight: bold;
 }
 
-table#hourly .icon {
+table .icon {
     font-size: 200%;
 }
 
-table#hourly .icon img.emoji {
+table .icon img.emoji {
    height: 0.8em;
    width: 0.8em;
    vertical-align: -0.1em;
@@ -100,7 +100,7 @@ table#hourly .icon img.emoji {
            drop-shadow(-1px -1px 0 #000);
 }
 
-table#hourly .summary {
+table .summary {
     text-align: left;
 }
 
@@ -118,6 +118,10 @@ table#hourly .summary {
 
 @media screen and (max-width: 235px) {
     table#hourly .summary {
+        display: none;
+    }
+    table#daily .icon,
+    table#daily .precipProbability {
         display: none;
     }
 }
