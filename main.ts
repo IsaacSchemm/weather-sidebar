@@ -56,6 +56,7 @@ class WeatherViewModel {
 
     readonly twelveHourTime;
     readonly useLocationTime;
+    readonly hoursAhead;
     readonly defaultLatitude;
     readonly defaultLongitude;
     readonly useGeolocation;
@@ -351,6 +352,7 @@ class SettingsViewModel {
 
     readonly twelveHourTime;
     readonly useLocationTime;
+    readonly hoursAhead;
     readonly latitude;
     readonly longitude;
     readonly useGeolocation;
