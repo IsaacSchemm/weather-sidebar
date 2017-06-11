@@ -74,6 +74,7 @@ class WeatherViewModel {
     readonly twelveHourTime;
     readonly useLocationTime;
     readonly hoursAhead;
+    readonly daysAhead;
     readonly defaultLatitude;
     readonly defaultLongitude;
     readonly useGeolocation;
@@ -88,6 +89,7 @@ class WeatherViewModel {
     readonly description;
 
     readonly hourlyForecast;
+    readonly dailyForecast;
 
     readonly currentLatitude;
     readonly currentLongitude;
@@ -104,8 +106,9 @@ class WeatherViewModel {
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
         this.hoursAhead = ko.observable(0);
-        this.defaultLatitude = ko.observable("");
-        this.defaultLongitude = ko.observable("");
+        this.daysAhead = ko.observable(0);
+        this.defaultLatitude = ko.observable(null);
+        this.defaultLongitude = ko.observable(null);
         this.useGeolocation = ko.observable(true);
         this.theme = ko.observable("compact-light");
         this.useTwitterEmoji = ko.observable(true);
@@ -125,6 +128,7 @@ class WeatherViewModel {
 
         // Weather forecast
         this.hourlyForecast = ko.observableArray();
+        this.dailyForecast = ko.observableArray();
 
         // Coordinates used for the weather forecast - can come from settings or geolocation API
         this.currentLatitude = ko.observable(null);
@@ -187,7 +191,8 @@ class WeatherViewModel {
                     await loadScript("https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js");
                 }
                 let settings = JSON.parse(json);
-                settings.hoursAhead = settings.hoursAhead || 12;
+                if (settings.hoursAhead === undefined) settings.hoursAhead = 12;
+                if (settings.daysAhead === undefined) settings.daysAhead = 0;
 
                 // Clock settings
                 if (this.twelveHourTime() != settings.twelveHourTime) {
@@ -200,6 +205,10 @@ class WeatherViewModel {
                 }
                 if (this.hoursAhead() != settings.hoursAhead) {
                     this.hoursAhead(settings.hoursAhead);
+                    displaySettingsChanged = true;
+                }
+                if (this.daysAhead() != settings.daysAhead) {
+                    this.daysAhead(settings.daysAhead);
                     displaySettingsChanged = true;
                 }
                 if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
@@ -278,6 +287,30 @@ class WeatherViewModel {
         }
     }
 
+    static getEmojiFromIconStr(icon: string) {
+        switch (icon) {
+            case "clear-day":
+            case "clear-night":
+                return 9728;
+            case "rain":
+                return 127783;
+            case "snow":
+            case "sleet":
+                return 127784;
+            case "wind":
+                return 128168;
+            case "fog":
+                return 127787;
+            case "cloudy":
+                return 9729;
+            case "partly-cloudy-day":
+            case "partly-cloudy-night":
+                return 9925;
+            default:
+                return null;
+        }
+    }
+
     // Updates the forecast information.
     async updateForecast() {
         this.error(null);
@@ -305,7 +338,7 @@ class WeatherViewModel {
             let timezone = this.useLocationTime()
                 ? data.timezone
                 : moment.tz.guess();
-            let format = this.twelveHourTime()
+            let timeFormat = this.twelveHourTime()
                 ? "h:mm A"
                 : "H:mm";
 
@@ -313,7 +346,7 @@ class WeatherViewModel {
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
-                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format(format)})`
+                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format(timeFormat)})`
                 }
                 this.alerts.push({
                     title: title,
@@ -322,41 +355,30 @@ class WeatherViewModel {
                 });
             }
 
-            this.time("Last updated: " + moment.tz(data.currently.time * 1000, timezone).format(format + " z"));
+            this.time("Last updated: " + moment.tz(data.currently.time * 1000, timezone).format(timeFormat + " z"));
             this.temperature(Math.round(data.currently.temperature) + String.fromCharCode(0xB0));
             this.description(data.currently.summary);
 
             this.hourlyForecast([]);
             for (let h of data.hourly.data.slice(1, this.hoursAhead() + 1)) {
-                // Use an anonymous function to map an icon name to a Unicode icon
-                const codePoint = (() => {
-                    switch (h.icon) {
-                        case "clear-day":
-                        case "clear-night":
-                            return 9728;
-                        case "rain":
-                            return 127783;
-                        case "snow":
-                        case "sleet":
-                            return 127784;
-                        case "wind":
-                            return 128168;
-                        case "fog":
-                            return 127787;
-                        case "cloudy":
-                            return 9729;
-                        case "partly-cloudy-day":
-                        case "partly-cloudy-night":
-                            return 9925;
-                        default:
-                            return null;
-                    }
-                })();
-                const icon = await this.emojiStr(codePoint);
+                const icon = await this.emojiStr(WeatherViewModel.getEmojiFromIconStr(h.icon));
 
                 this.hourlyForecast.push({
-                    time: moment.tz(h.time * 1000, timezone).format(format),
+                    time: moment.tz(h.time * 1000, timezone).format(timeFormat),
                     temp: Math.round(h.temperature || 0) + String.fromCodePoint(0xB0),
+                    icon: icon,
+                    summary: h.summary,
+                    precipProbability: Math.round(h.precipProbability * 100) + "%"
+                });
+            }
+            this.dailyForecast([]);
+            for (let h of data.daily.data.slice(0, this.daysAhead())) {
+                const icon = await this.emojiStr(WeatherViewModel.getEmojiFromIconStr(h.icon));
+
+                this.dailyForecast.push({
+                    time: moment.tz(h.time * 1000, timezone).format("dddd"),
+                    tempMax: Math.round(h.temperatureMax || 0) + String.fromCodePoint(0xB0),
+                    tempMin: Math.round(h.temperatureMin || 0) + String.fromCodePoint(0xB0),
                     icon: icon,
                     summary: h.summary,
                     precipProbability: Math.round(h.precipProbability * 100) + "%"
@@ -379,6 +401,7 @@ class SettingsViewModel {
     readonly twelveHourTime;
     readonly useLocationTime;
     readonly hoursAhead;
+    readonly daysAhead;
     readonly latitude;
     readonly longitude;
     readonly useGeolocation;
@@ -390,10 +413,11 @@ class SettingsViewModel {
 
     constructor(parent) {
         this.parent = parent;
-        
+
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
         this.hoursAhead = ko.observable(parent.hoursAhead());
+        this.daysAhead = ko.observable(parent.daysAhead());
         this.latitude = ko.observable(parent.defaultLatitude());
         this.longitude = ko.observable(parent.defaultLongitude());
         this.useGeolocation = ko.observable(parent.useGeolocation());
@@ -430,11 +454,11 @@ class SettingsViewModel {
     }
 
     saveSettings() {
-        // Coordinates are saved in settings as string
         let settings = {
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
             hoursAhead: +this.hoursAhead(),
+            daysAhead: +this.daysAhead(),
             latitude: this.latitude(),
             longitude: this.longitude(),
             useGeolocation: !!this.useGeolocation(),

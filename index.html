@@ -42,6 +42,7 @@
         <hr />
         <label>Forecast</label>
         <label class="latlng">Hours: <input data-bind="value: hoursAhead" type="number" min="0" max="48" step="1" /></label>
+        <label class="latlng">Days: <input data-bind="value: daysAhead" type="number" min="0" max="8" step="1" /></label>
         <hr />
         <label>Default location</label>
         <label class="latlng">Latitude: <input id="latitude" data-bind="value: latitude" type="number" step="any" /></label>
@@ -94,6 +95,7 @@
             Clear
         </div>
         <hr />
+        <!-- ko if: hourlyForecast().length -->
         <h1>Hourly forecast</h1>
         <table id="hourly" data-bind="foreach: hourlyForecast">
             <tr>
@@ -104,6 +106,25 @@
                 <td class="precipProbability" data-bind="text: precipProbability">10%</td>
             </tr>
         </table>
+        <!-- /ko -->
+        <!-- ko if: dailyForecast().length -->
+        <h1>Daily forecast</h1>
+        <table id="hourly" data-bind="foreach: dailyForecast">
+            <tr>
+                <td width="50%"></td>
+                <td class="time" data-bind="text: time">x</td>
+                <td class="temp">
+                    <span data-bind="text: tempMax">60&deg;</span>/<span data-bind="text: tempMin">40&deg;</span>
+                </td>
+                <td class="icon" data-bind="html: icon">&#9729;</td>
+                <td class="precipProbability" data-bind="text: precipProbability">10%</td>
+                <td width="50%"></td>
+            </tr>
+            <tr>
+                <td colspan="6" data-bind="text: summary">Light rain in the morning and evening.</td>
+            </tr>
+        </table>
+        <!-- /ko -->
         <!-- /ko -->
         <hr />
         <div>
