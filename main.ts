@@ -2,8 +2,24 @@
 declare var ko: any;
 declare var moment: any;
 
-if (!String.fromCodePoint) {
-    String.fromCodePoint = () => "";
+if (!window.console) {
+    (window as any).console = {
+        log: () => { },
+        warn: e => alert((e || {}).message || e),
+        error: e => alert((e || {}).message || e)
+    }
+}
+
+if (!Array.isArray) {
+    (Array as any).isArray = function (arg) {
+        return Object.prototype.toString.call(arg) === '[object Array]';
+    };
+}
+
+if (!String.prototype.trim) {
+    (String as any).prototype.trim = function () {
+        return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
+    };
 }
 
 function getCurrentCoords(): Promise<{
@@ -46,7 +62,8 @@ function loadScript(src) {
         s.src = src;
         s.onload = resolve;
         s.onerror = reject;
-        document.head.appendChild(s);
+        const head = document.head || document.getElementsByTagName("head")[0];
+        head.appendChild(s);
     });
 }
 
@@ -151,9 +168,12 @@ class WeatherViewModel {
     }
 
     // Loads and applies new settings from HTML local storage.
-    loadSettings() {
+    async loadSettings() {
         try {
             let displaySettingsChanged = false;
+            if (!window.localStorage) {
+                await loadScript("http://unpkg.com/localstorage-browser-polyfill/localstorage-browser-polyfill.js");
+            }
             let json = localStorage.getItem("weather-settings");
             if (json == null) {
                 json = localStorage.getItem("settings");
@@ -163,6 +183,9 @@ class WeatherViewModel {
                 }
             }
             if (json != null) {
+                if (!window["JSON"]) {
+                    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js");
+                }
                 let settings = JSON.parse(json);
                 settings.hoursAhead = settings.hoursAhead || 12;
 

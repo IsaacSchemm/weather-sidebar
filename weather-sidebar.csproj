@@ -73,6 +73,7 @@
     <TypeScriptCompile Include="es2015.promise.d.ts" />
     <TypeScriptCompile Include="main.ts" />
     <None Include="COPYING" />
+    <Content Include="fromcodepoint.js" />
     <Content Include="modern.css" />
     <Content Include="packages.config" />
   </ItemGroup>
