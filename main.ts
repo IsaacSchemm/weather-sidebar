@@ -71,6 +71,7 @@ class WeatherViewModel {
     readonly settingsModel;
     readonly aboutShown;
 
+    readonly units;
     readonly twelveHourTime;
     readonly useLocationTime;
     readonly hoursAhead;
@@ -326,7 +327,7 @@ class WeatherViewModel {
                         "sl", "sr", "sv", "tet", "tr",
                         "uk", "x-pig-latin",
                         "zh", "zh-tw"];
-        let languages = navigator.languages || [navigator.language || navigator.userLanguage];
+        let languages: string[] = (navigator as any).languages || [navigator.language || (navigator as any).userLanguage];
         for (let l of languages) {
             let index = supportedLanguages.indexOf(l.toLowerCase());
             if (index >= 0) {
@@ -429,6 +430,7 @@ class WeatherViewModel {
 class SettingsViewModel {
     readonly parent: WeatherViewModel;
 
+    readonly units;
     readonly twelveHourTime;
     readonly useLocationTime;
     readonly hoursAhead;
