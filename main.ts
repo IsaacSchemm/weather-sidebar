@@ -193,6 +193,7 @@ class WeatherViewModel {
                     await loadScript("https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js");
                 }
                 let settings = JSON.parse(json);
+                if (settings.units === undefined) settings.units = 12;
                 if (settings.hoursAhead === undefined) settings.hoursAhead = 12;
                 if (settings.daysAhead === undefined) settings.daysAhead = 0;
 
