@@ -116,6 +116,7 @@ class WeatherViewModel {
             }
             if (json != null) {
                 let settings = JSON.parse(json);
+                if (settings.units === undefined) settings.units = 12;
                 if (settings.hoursAhead === undefined) settings.hoursAhead = 12;
                 if (settings.daysAhead === undefined) settings.daysAhead = 0;
 
