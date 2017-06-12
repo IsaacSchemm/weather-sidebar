@@ -18,8 +18,15 @@ namespace weather_sidebar {
                 context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return;
             }
-            
-            var request = WebRequest.CreateHttp($"https://api.darksky.net/forecast/{apiKey}/{url_parameter}");
+
+            string url = $"https://api.darksky.net/forecast/{apiKey}/{url_parameter}?exclude=minutely";
+            if (!string.IsNullOrEmpty(context.Request.QueryString["lang"])) {
+                url += "&lang=" + context.Request.QueryString["lang"];
+            }
+            if (!string.IsNullOrEmpty(context.Request.QueryString["units"])) {
+                url += "&units=" + context.Request.QueryString["units"];
+            }
+            var request = WebRequest.CreateHttp(url);
             try {
                 var darkSkyResp = request.GetResponse();
 
