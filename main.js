@@ -227,6 +227,32 @@ class WeatherViewModel {
         }
     }
 
+    static getLanguage() {
+        let supportedLanguages = [
+                        "ar", "az", "be", "bg", "bs",
+                        "ca", "cs", "de", "el", "en",
+                        "es", "et", "fr", "hr", "hu",
+                        "id", "it", "is", "kw", "nb",
+                        "nl", "pl", "pt", "ru", "sk",
+                        "sl", "sr", "sv", "tet", "tr",
+                        "uk", "x-pig-latin",
+                        "zh", "zh-tw"];
+        let languages = navigator.languages || [navigator.language || navigator.userLanguage];
+        for (let l of languages) {
+            let index = supportedLanguages.indexOf(l.toLowerCase());
+            if (index >= 0) {
+                return supportedLanguages[index];
+            }
+        }
+        for (let l of languages) {
+            let index = supportedLanguages.indexOf(l.substr(0, l.indexOf("-")).toLowerCase());
+            if (index >= 0) {
+                return supportedLanguages[index];
+            }
+        }
+        return "fr";
+    }
+
     // Updates the forecast information.
     async updateForecast() {
         this.error(null);
@@ -235,7 +261,7 @@ class WeatherViewModel {
             let data = null;
             for (let proxyPage of ["proxy.php", "proxy.ashx"]) {
                 try {
-                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}`);
+                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}&lang=${WeatherViewModel.getLanguage()}`);
                     if (!response.ok) throw new Error(`Request to ${proxyPage} returned status ${response.status}`);
                     data = await response.json();
                     if (data) break;
