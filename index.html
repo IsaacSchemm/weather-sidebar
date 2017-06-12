@@ -33,6 +33,14 @@
         This page requires JavaScript to be enabled.
     </noscript>
     <div id="setup" style="display: none" data-bind="with: settingsModel">
+        <label>
+            Units:
+            <select data-bind="value: units">
+                <option value="auto">Auto</option>
+                <option value="us">Imperial (&deg;F)</option>
+                <option value="si">SI (&deg;C)</option>
+            </select>
+        </label>
         <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
         <label><input id="useLocationTime" data-bind="checked: useLocationTime" type="checkbox" /> Use the chosen location's time zone</label>
         <hr />

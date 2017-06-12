@@ -33,6 +33,7 @@ class WeatherViewModel {
         this.aboutShown = ko.observable(false);
 
         // Settings
+        this.units = ko.observable("auto");
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
         this.hoursAhead = ko.observable(0);
@@ -119,6 +120,10 @@ class WeatherViewModel {
                 if (settings.daysAhead === undefined) settings.daysAhead = 0;
 
                 // Clock settings
+                if (this.units() != settings.units) {
+                    this.units(settings.units);
+                    displaySettingsChanged = true;
+                }
                 if (this.twelveHourTime() != settings.twelveHourTime) {
                     this.twelveHourTime(settings.twelveHourTime);
                     displaySettingsChanged = true;
@@ -261,7 +266,7 @@ class WeatherViewModel {
             let data = null;
             for (let proxyPage of ["proxy.php", "proxy.ashx"]) {
                 try {
-                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}&lang=${WeatherViewModel.getLanguage()}`);
+                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}&units=${this.units()}&lang=${WeatherViewModel.getLanguage()}`);
                     if (!response.ok) throw new Error(`Request to ${proxyPage} returned status ${response.status}`);
                     data = await response.json();
                     if (data) break;
@@ -341,6 +346,7 @@ class SettingsViewModel {
     constructor(parent) {
         this.parent = parent;
 
+        this.units = ko.observable(parent.units());
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
         this.hoursAhead = ko.observable(parent.hoursAhead());
@@ -382,6 +388,7 @@ class SettingsViewModel {
 
     saveSettings() {
         let settings = {
+            units: this.units(),
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
             hoursAhead: +this.hoursAhead(),
