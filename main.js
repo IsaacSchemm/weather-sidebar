@@ -59,8 +59,8 @@ const WeatherSupportedLanguages = [
     { code: "tet", name: "Tetum" },
     { code: "tr", name: "Turkish" },
     { code: "uk", name: "Ukrainian" },
-    { code: "zh", name: "Simplified Chinese" },
-    { code: "zh-tw", name: "Traditional Chinese" }
+    { code: "zh", name: "Chinese (Simplified)" },
+    { code: "zh-tw", name: "Chinese (Traditional)" }
 ];
 
 const WeatherDefaultSettings = {
@@ -408,7 +408,7 @@ class SettingsViewModel {
         this.theme = parent.theme;
 
         // List of languages
-        this.languageOptions = [{ code: "", name: "Auto (default)" }].concat(WeatherSupportedLanguages);
+        this.languageOptions = [{ code: "", name: "Auto (default)" }].concat(WeatherSupportedLanguages.slice().sort((a, b) => a.name.localeCompare(b.name)));
 
         this.locationMessage = ko.observable("");
     }
