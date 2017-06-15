@@ -27,6 +27,26 @@ function loadScript(src) {
     });
 }
 
+var WeatherDefaultSettings = {
+    units: "auto",
+    twelveHourTime: true,
+    useLocationTime: true,
+    hoursAhead: 8,
+    daysAhead: 0,
+    defaultLatitude: 0,
+    defaultLongitude: 0,
+    useGeolocation: true,
+    theme: "compact-light",
+    useTwitterEmoji: (() => {
+        if (/(Windows|OS X|iOS|Android)/.test(navigator.userAgent)) {
+            if (!/(Windows NT [456]\.|OS X 10_[0123456]_)/.test(navigator.userAgent)) {
+                return false;
+            }
+        }
+        return true;
+    })(),
+}
+
 class WeatherViewModel {
     constructor() {
         this.settingsModel = ko.observable(null);
@@ -43,11 +63,6 @@ class WeatherViewModel {
         this.useGeolocation = ko.observable(true);
         this.theme = ko.observable("compact-light");
         this.useTwitterEmoji = ko.observable(true);
-        if (/(Windows|OS X|iOS|Android)/.test(navigator.userAgent)) {
-            if (!/(Windows NT [456]\.|OS X 10_[0123456]_)/.test(navigator.userAgent)) {
-                this.useTwitterEmoji(false);
-            }
-        }
 
         this.error = ko.observable(null);
 
@@ -114,46 +129,42 @@ class WeatherViewModel {
                     localStorage.removeItem("settings");
                 }
             }
-            if (json != null) {
-                let settings = JSON.parse(json);
-                if (settings.units === undefined) settings.units = 12;
-                if (settings.hoursAhead === undefined) settings.hoursAhead = 12;
-                if (settings.daysAhead === undefined) settings.daysAhead = 0;
 
-                // Clock settings
-                if (this.units() != settings.units) {
-                    this.units(settings.units);
-                    displaySettingsChanged = true;
-                }
-                if (this.twelveHourTime() != settings.twelveHourTime) {
-                    this.twelveHourTime(settings.twelveHourTime);
-                    displaySettingsChanged = true;
-                }
-                if (this.useLocationTime() != settings.useLocationTime) {
-                    this.useLocationTime(settings.useLocationTime);
-                    displaySettingsChanged = true;
-                }
-                if (this.hoursAhead() != settings.hoursAhead) {
-                    this.hoursAhead(settings.hoursAhead);
-                    displaySettingsChanged = true;
-                }
-                if (this.daysAhead() != settings.daysAhead) {
-                    this.daysAhead(settings.daysAhead);
-                    displaySettingsChanged = true;
-                }
-                if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
-                    this.useTwitterEmoji(settings.useTwitterEmoji);
-                    displaySettingsChanged = true;
-                }
+            let settings = Object.assign(WeatherDefaultSettings, JSON.parse(json || "{}"));
 
-                // Location settings
-                this.defaultLatitude(settings.latitude);
-                this.defaultLongitude(settings.longitude);
-                this.useGeolocation(settings.useGeolocation);
-                this.useTwitterEmoji(settings.useTwitterEmoji);
-
-                this.theme(settings.theme || "compact-light");
+            // Clock settings
+            if (this.units() != settings.units) {
+                this.units(settings.units);
+                displaySettingsChanged = true;
             }
+            if (this.twelveHourTime() != settings.twelveHourTime) {
+                this.twelveHourTime(settings.twelveHourTime);
+                displaySettingsChanged = true;
+            }
+            if (this.useLocationTime() != settings.useLocationTime) {
+                this.useLocationTime(settings.useLocationTime);
+                displaySettingsChanged = true;
+            }
+            if (this.hoursAhead() != settings.hoursAhead) {
+                this.hoursAhead(settings.hoursAhead);
+                displaySettingsChanged = true;
+            }
+            if (this.daysAhead() != settings.daysAhead) {
+                this.daysAhead(settings.daysAhead);
+                displaySettingsChanged = true;
+            }
+            if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
+                this.useTwitterEmoji(settings.useTwitterEmoji);
+                displaySettingsChanged = true;
+            }
+
+            // Location settings
+            this.defaultLatitude(settings.latitude);
+            this.defaultLongitude(settings.longitude);
+            this.useGeolocation(settings.useGeolocation);
+            this.useTwitterEmoji(settings.useTwitterEmoji);
+
+            this.theme(settings.theme || "compact-light");
 
             // If one of the time display settings changed, we'll want to refresh.
             // Otherwise, we only need to refresh if our location has changed.
