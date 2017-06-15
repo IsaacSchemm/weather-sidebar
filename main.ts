@@ -67,10 +67,67 @@ function loadScript(src) {
     });
 }
 
+const WeatherSupportedLanguages = [
+    { code: "ar", name: "Arabic" },
+    { code: "az", name: "Azerbaijani" },
+    { code: "be", name: "Belarusian" },
+    { code: "bg", name: "Bulgarian" },
+    { code: "bs", name: "Bosnian" },
+    { code: "ca", name: "Catalan" },
+    { code: "cs", name: "Czech" },
+    { code: "de", name: "German" },
+    { code: "el", name: "Greek" },
+    { code: "en", name: "English" },
+    { code: "es", name: "Spanish" },
+    { code: "et", name: "Estonian" },
+    { code: "fr", name: "French" },
+    { code: "hr", name: "Croatian" },
+    { code: "hu", name: "Hungarian" },
+    { code: "id", name: "Indonesian" },
+    { code: "it", name: "Italian" },
+    { code: "is", name: "Icelandic" },
+    { code: "kw", name: "Cornish" },
+    { code: "nb", name: "Norwegian (Bokmål)" },
+    { code: "nl", name: "Dutch" },
+    { code: "pl", name: "Polish" },
+    { code: "pt", name: "Portuguese" },
+    { code: "ru", name: "Russian" },
+    { code: "sk", name: "Slovak" },
+    { code: "sl", name: "Slovenian" },
+    { code: "sr", name: "Serbian" },
+    { code: "sv", name: "Swedish" },
+    { code: "tet", name: "Tetum" },
+    { code: "tr", name: "Turkish" },
+    { code: "uk", name: "Ukrainian" },
+    { code: "zh", name: "Chinese (Simplified)" },
+    { code: "zh-tw", name: "Chinese (Traditional)" }
+];
+
+const WeatherDefaultSettings = {
+    units: "auto",
+    twelveHourTime: true,
+    useLocationTime: true,
+    hoursAhead: 8,
+    daysAhead: 0,
+    defaultLatitude: 0,
+    defaultLongitude: 0,
+    useGeolocation: true,
+    theme: "compact-light",
+    useTwitterEmoji: (() => {
+        if (/(Windows|OS X|iOS|Android)/.test(navigator.userAgent)) {
+            if (!/(Windows NT [456]\.|OS X 10_[0123456]_)/.test(navigator.userAgent)) {
+                return false;
+            }
+        }
+        return true;
+    })(),
+}
+
 class WeatherViewModel {
     readonly settingsModel;
     readonly aboutShown;
 
+    readonly language;
     readonly units;
     readonly twelveHourTime;
     readonly useLocationTime;
@@ -104,6 +161,7 @@ class WeatherViewModel {
         this.aboutShown = ko.observable(false);
 
         // Settings
+        this.language = ko.observable("");
         this.units = ko.observable("auto");
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
@@ -114,11 +172,6 @@ class WeatherViewModel {
         this.useGeolocation = ko.observable(true);
         this.theme = ko.observable("compact-light");
         this.useTwitterEmoji = ko.observable(true);
-        if (/(Windows|OS X|iOS|Android)/.test(navigator.userAgent)) {
-            if (!/(Windows NT [456]\.|OS X 10_[0123456]_)/.test(navigator.userAgent)) {
-                this.useTwitterEmoji(false);
-            }
-        }
 
         this.error = ko.observable(null);
 
@@ -188,49 +241,49 @@ class WeatherViewModel {
                     localStorage.removeItem("settings");
                 }
             }
-            if (json != null) {
-                if (!window["JSON"]) {
-                    await loadScript("https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js");
-                }
-                let settings = JSON.parse(json);
-                if (settings.units === undefined) settings.units = 12;
-                if (settings.hoursAhead === undefined) settings.hoursAhead = 12;
-                if (settings.daysAhead === undefined) settings.daysAhead = 0;
-
-                // Clock settings
-                if (this.units() != settings.units) {
-                    this.units(settings.units);
-                    displaySettingsChanged = true;
-                }
-                if (this.twelveHourTime() != settings.twelveHourTime) {
-                    this.twelveHourTime(settings.twelveHourTime);
-                    displaySettingsChanged = true;
-                }
-                if (this.useLocationTime() != settings.useLocationTime) {
-                    this.useLocationTime(settings.useLocationTime);
-                    displaySettingsChanged = true;
-                }
-                if (this.hoursAhead() != settings.hoursAhead) {
-                    this.hoursAhead(settings.hoursAhead);
-                    displaySettingsChanged = true;
-                }
-                if (this.daysAhead() != settings.daysAhead) {
-                    this.daysAhead(settings.daysAhead);
-                    displaySettingsChanged = true;
-                }
-                if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
-                    this.useTwitterEmoji(settings.useTwitterEmoji);
-                    displaySettingsChanged = true;
-                }
-
-                // Location settings
-                this.defaultLatitude(settings.latitude);
-                this.defaultLongitude(settings.longitude);
-                this.useGeolocation(settings.useGeolocation);
-                this.useTwitterEmoji(settings.useTwitterEmoji);
-
-                this.theme(settings.theme || "compact-light");
+            if (!window["JSON"]) {
+                await loadScript("https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js");
             }
+
+            let settings = { ...WeatherDefaultSettings, ...JSON.parse(json || "{}") };
+
+            // Clock settings
+            if (this.language() != settings.language) {
+                this.language(settings.language);
+                displaySettingsChanged = true;
+            }
+            if (this.units() != settings.units) {
+                this.units(settings.units);
+                displaySettingsChanged = true;
+            }
+            if (this.twelveHourTime() != settings.twelveHourTime) {
+                this.twelveHourTime(settings.twelveHourTime);
+                displaySettingsChanged = true;
+            }
+            if (this.useLocationTime() != settings.useLocationTime) {
+                this.useLocationTime(settings.useLocationTime);
+                displaySettingsChanged = true;
+            }
+            if (this.hoursAhead() != settings.hoursAhead) {
+                this.hoursAhead(settings.hoursAhead);
+                displaySettingsChanged = true;
+            }
+            if (this.daysAhead() != settings.daysAhead) {
+                this.daysAhead(settings.daysAhead);
+                displaySettingsChanged = true;
+            }
+            if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
+                this.useTwitterEmoji(settings.useTwitterEmoji);
+                displaySettingsChanged = true;
+            }
+
+            // Location settings
+            this.defaultLatitude(settings.latitude);
+            this.defaultLongitude(settings.longitude);
+            this.useGeolocation(settings.useGeolocation);
+            this.useTwitterEmoji(settings.useTwitterEmoji);
+
+            this.theme(settings.theme || "compact-light");
 
             // If one of the time display settings changed, we'll want to refresh.
             // Otherwise, we only need to refresh if our location has changed.
@@ -318,16 +371,10 @@ class WeatherViewModel {
         }
     }
 
-    static getLanguage() {
-        let supportedLanguages = [
-                        "ar", "az", "be", "bg", "bs",
-                        "ca", "cs", "de", "el", "en",
-                        "es", "et", "fr", "hr", "hu",
-                        "id", "it", "is", "kw", "nb",
-                        "nl", "pl", "pt", "ru", "sk",
-                        "sl", "sr", "sv", "tet", "tr",
-                        "uk", "x-pig-latin",
-                        "zh", "zh-tw"];
+    getLanguage() {
+        if (this.language()) return this.language();
+
+        const supportedLanguages = WeatherSupportedLanguages.map(o => o.code);
         let languages: string[] = (navigator as any).languages || [navigator.language || (navigator as any).userLanguage];
         for (let l of languages) {
             let index = supportedLanguages.indexOf(l.toLowerCase());
@@ -352,7 +399,7 @@ class WeatherViewModel {
             let data = null;
             for (let proxyPage of ["proxy.php", "proxy.ashx"]) {
                 try {
-                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}&units=${this.units()}&lang=${WeatherViewModel.getLanguage()}`);
+                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}&units=${this.units()}&lang=${this.getLanguage()}`);
                     if (!response.ok) throw new Error(`Request to ${proxyPage} returned status ${response.status}`);
                     data = await response.json();
                     if (data) break;
@@ -431,6 +478,7 @@ class WeatherViewModel {
 class SettingsViewModel {
     readonly parent: WeatherViewModel;
 
+    readonly language;
     readonly units;
     readonly twelveHourTime;
     readonly useLocationTime;
@@ -439,15 +487,17 @@ class SettingsViewModel {
     readonly latitude;
     readonly longitude;
     readonly useGeolocation;
+    readonly useTwitterEmoji;
 
     readonly theme;
-    readonly useTwitterEmoji;
+    readonly languageOptions;
 
     readonly locationMessage;
 
     constructor(parent) {
         this.parent = parent;
 
+        this.language = ko.observable(parent.language());
         this.units = ko.observable(parent.units());
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
@@ -460,6 +510,9 @@ class SettingsViewModel {
 
         // By using the same observable, the theme will update instantly
         this.theme = parent.theme;
+
+        // List of languages
+        this.languageOptions = [{ code: "", name: "Auto (default)" }].concat(WeatherSupportedLanguages.slice().sort((a, b) => a.name.localeCompare(b.name)));
 
         this.locationMessage = ko.observable("");
     }
@@ -490,6 +543,7 @@ class SettingsViewModel {
 
     saveSettings() {
         let settings = {
+            language: this.language(),
             units: this.units(),
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
