@@ -27,7 +27,43 @@ function loadScript(src) {
     });
 }
 
-var WeatherDefaultSettings = {
+const WeatherSupportedLanguages = [
+    { code: "ar", name: "Arabic" },
+    { code: "az", name: "Azerbaijani" },
+    { code: "be", name: "Belarusian" },
+    { code: "bg", name: "Bulgarian" },
+    { code: "bs", name: "Bosnian" },
+    { code: "ca", name: "Catalan" },
+    { code: "cs", name: "Czech" },
+    { code: "de", name: "German" },
+    { code: "el", name: "Greek" },
+    { code: "en", name: "English" },
+    { code: "es", name: "Spanish" },
+    { code: "et", name: "Estonian" },
+    { code: "fr", name: "French" },
+    { code: "hr", name: "Croatian" },
+    { code: "hu", name: "Hungarian" },
+    { code: "id", name: "Indonesian" },
+    { code: "it", name: "Italian" },
+    { code: "is", name: "Icelandic" },
+    { code: "kw", name: "Cornish" },
+    { code: "nb", name: "Norwegian (Bokmål)" },
+    { code: "nl", name: "Dutch" },
+    { code: "pl", name: "Polish" },
+    { code: "pt", name: "Portuguese" },
+    { code: "ru", name: "Russian" },
+    { code: "sk", name: "Slovak" },
+    { code: "sl", name: "Slovenian" },
+    { code: "sr", name: "Serbian" },
+    { code: "sv", name: "Swedish" },
+    { code: "tet", name: "Tetum" },
+    { code: "tr", name: "Turkish" },
+    { code: "uk", name: "Ukrainian" },
+    { code: "zh", name: "Simplified Chinese" },
+    { code: "zh-tw", name: "Traditional Chinese" }
+];
+
+const WeatherDefaultSettings = {
     units: "auto",
     twelveHourTime: true,
     useLocationTime: true,
@@ -53,6 +89,7 @@ class WeatherViewModel {
         this.aboutShown = ko.observable(false);
 
         // Settings
+        this.language = ko.observable("");
         this.units = ko.observable("auto");
         this.twelveHourTime = ko.observable(true);
         this.useLocationTime = ko.observable(true);
@@ -133,6 +170,10 @@ class WeatherViewModel {
             let settings = Object.assign(WeatherDefaultSettings, JSON.parse(json || "{}"));
 
             // Clock settings
+            if (this.language() != settings.language) {
+                this.language(settings.language);
+                displaySettingsChanged = true;
+            }
             if (this.units() != settings.units) {
                 this.units(settings.units);
                 displaySettingsChanged = true;
@@ -244,16 +285,10 @@ class WeatherViewModel {
         }
     }
 
-    static getLanguage() {
-        let supportedLanguages = [
-                        "ar", "az", "be", "bg", "bs",
-                        "ca", "cs", "de", "el", "en",
-                        "es", "et", "fr", "hr", "hu",
-                        "id", "it", "is", "kw", "nb",
-                        "nl", "pl", "pt", "ru", "sk",
-                        "sl", "sr", "sv", "tet", "tr",
-                        "uk", "x-pig-latin",
-                        "zh", "zh-tw"];
+    getLanguage() {
+        if (this.language()) return this.language();
+
+        const supportedLanguages = WeatherSupportedLanguages.map(o => o.code);
         let languages = navigator.languages || [navigator.language || navigator.userLanguage];
         for (let l of languages) {
             let index = supportedLanguages.indexOf(l.toLowerCase());
@@ -278,7 +313,7 @@ class WeatherViewModel {
             let data = null;
             for (let proxyPage of ["proxy.php", "proxy.ashx"]) {
                 try {
-                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}&units=${this.units()}&lang=${WeatherViewModel.getLanguage()}`);
+                    let response = await fetch(`${proxyPage}?url=${this.currentLatitude()},${this.currentLongitude()}&units=${this.units()}&lang=${this.getLanguage()}`);
                     if (!response.ok) throw new Error(`Request to ${proxyPage} returned status ${response.status}`);
                     data = await response.json();
                     if (data) break;
@@ -358,6 +393,7 @@ class SettingsViewModel {
     constructor(parent) {
         this.parent = parent;
 
+        this.language = ko.observable(parent.language());
         this.units = ko.observable(parent.units());
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
@@ -370,6 +406,9 @@ class SettingsViewModel {
 
         // By using the same observable, the theme will update instantly
         this.theme = parent.theme;
+
+        // List of languages
+        this.languageOptions = [{ code: "", name: "Auto (default)" }].concat(WeatherSupportedLanguages);
 
         this.locationMessage = ko.observable("");
     }
@@ -400,6 +439,7 @@ class SettingsViewModel {
 
     saveSettings() {
         let settings = {
+            language: this.language(),
             units: this.units(),
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),

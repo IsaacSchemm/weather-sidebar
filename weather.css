@@ -21,18 +21,25 @@ h1 {
     max-width: 144px;
 }
 
-label.latlng {
+#setup .l10nItem select {
+    min-width: 144px;
+}
+
+#setup label.latlng {
     line-height: 26px;
     text-align: left;
     width: 144px;
     margin: auto;
 }
-label.latlng input {
+#setup label.latlng input {
     box-sizing: border-box;
     width: calc(100% - 72px);
     height: 22px;
     margin: 2px 0;
     float: right;
+}
+#setup select {
+    margin: 2px 0;
 }
 
 #setup > button {

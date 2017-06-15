@@ -33,10 +33,14 @@
         This page requires JavaScript to be enabled.
     </noscript>
     <div id="setup" style="display: none" data-bind="with: settingsModel">
-        <label>
+        <label class="l10nItem">
+            Language:
+            <select data-bind="value: language, options: languageOptions, optionsText: 'name', optionsValue: 'code'"></select>
+        </label>
+        <label class="l10nItem">
             Units:
             <select data-bind="value: units">
-                <option value="auto">Auto</option>
+                <option value="auto">Auto (default)</option>
                 <option value="us">Imperial (&deg;F)</option>
                 <option value="si">SI (&deg;C)</option>
             </select>
