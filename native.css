@@ -16,10 +16,10 @@ body.native {
     color: ButtonText;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 12px;
-    font: -moz-window;
+    font: -moz-info;
 }
 
 body.native button {
     font-size: 12px;
-    font: -moz-window;
+    font: -moz-button;
 }
