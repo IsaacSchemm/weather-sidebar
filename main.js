@@ -46,6 +46,7 @@ const WeatherSupportedLanguages = [
     { code: "id", name: "Indonesian" },
     { code: "it", name: "Italian" },
     { code: "is", name: "Icelandic" },
+    { code: "ka", name: "Georgian" },
     { code: "kw", name: "Cornish" },
     { code: "nb", name: "Norwegian (Bokmål)" },
     { code: "nl", name: "Dutch" },
