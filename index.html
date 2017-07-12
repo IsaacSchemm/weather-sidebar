@@ -45,6 +45,7 @@
                 <option value="si">SI (&deg;C)</option>
             </select>
         </label>
+        <label><input id="displayHumidity" data-bind="checked: displayHumidity" type="checkbox" /> Include humidity in daily forecast</label>
         <label><input id="twelveHourTime" data-bind="checked: twelveHourTime" type="checkbox" /> Use a 12-hour clock</label>
         <label><input id="useLocationTime" data-bind="checked: useLocationTime" type="checkbox" /> Use the chosen location's time zone</label>
         <hr />
@@ -130,6 +131,9 @@
             </tr>
             <tr>
                 <td colspan="6" data-bind="text: summary">Light rain in the morning and evening.</td>
+            </tr>
+            <tr data-bind="if: $parent.displayHumidity">
+                <td colspan="6">Relative humidity: <span data-bind="text: humidity">50</span>%</td>
             </tr>
         </table>
         <!-- /ko -->
