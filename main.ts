@@ -86,6 +86,7 @@ const WeatherSupportedLanguages = [
     { code: "id", name: "Indonesian" },
     { code: "it", name: "Italian" },
     { code: "is", name: "Icelandic" },
+    { code: "ka", name: "Georgian" },
     { code: "kw", name: "Cornish" },
     { code: "nb", name: "Norwegian (Bokmål)" },
     { code: "nl", name: "Dutch" },
@@ -105,6 +106,7 @@ const WeatherSupportedLanguages = [
 
 const WeatherDefaultSettings = {
     units: "auto",
+    displayHumidity: true,
     twelveHourTime: true,
     useLocationTime: true,
     hoursAhead: 8,
@@ -164,6 +166,7 @@ class WeatherViewModel {
         this.language = ko.observable("");
         this.units = ko.observable("auto");
         this.twelveHourTime = ko.observable(true);
+        this.displayHumidity = ko.observable(true);
         this.useLocationTime = ko.observable(true);
         this.hoursAhead = ko.observable(0);
         this.daysAhead = ko.observable(0);
@@ -276,6 +279,9 @@ class WeatherViewModel {
                 this.useTwitterEmoji(settings.useTwitterEmoji);
                 displaySettingsChanged = true;
             }
+
+            // Display settings that don't require re-post
+            this.displayHumidity(settings.displayHumidity);
 
             // Location settings
             this.defaultLatitude(settings.latitude);
@@ -459,6 +465,7 @@ class WeatherViewModel {
                     time: moment.tz(h.time * 1000, timezone).format("dddd"),
                     tempMax: Math.round(h.temperatureMax || 0) + String.fromCodePoint(0xB0),
                     tempMin: Math.round(h.temperatureMin || 0) + String.fromCodePoint(0xB0),
+                    humidity: h.humidity == null ? null : h.humidity * 100,
                     icon: icon,
                     summary: h.summary,
                     precipProbability: Math.round(h.precipProbability * 100) + "%"
@@ -499,6 +506,7 @@ class SettingsViewModel {
 
         this.language = ko.observable(parent.language());
         this.units = ko.observable(parent.units());
+        this.displayHumidity = ko.observable(parent.displayHumidity());
         this.twelveHourTime = ko.observable(parent.twelveHourTime());
         this.useLocationTime = ko.observable(parent.useLocationTime());
         this.hoursAhead = ko.observable(parent.hoursAhead());
@@ -545,6 +553,7 @@ class SettingsViewModel {
         let settings = {
             language: this.language(),
             units: this.units(),
+            displayHumidity: !!this.displayHumidity(),
             twelveHourTime: !!this.twelveHourTime(),
             useLocationTime: !!this.useLocationTime(),
             hoursAhead: +this.hoursAhead(),
