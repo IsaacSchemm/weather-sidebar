@@ -131,6 +131,7 @@ class WeatherViewModel {
 
     readonly language;
     readonly units;
+    readonly displayHumidity;
     readonly twelveHourTime;
     readonly useLocationTime;
     readonly hoursAhead;
@@ -487,6 +488,7 @@ class SettingsViewModel {
 
     readonly language;
     readonly units;
+    readonly displayHumidity;
     readonly twelveHourTime;
     readonly useLocationTime;
     readonly hoursAhead;
