@@ -347,7 +347,7 @@ class WeatherViewModel {
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
-                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format(timeFormat)})`
+                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format("dddd " + timeFormat)})`
                 }
                 this.alerts.push({
                     title: title,
