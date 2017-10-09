@@ -87,6 +87,7 @@ const WeatherSupportedLanguages = [
     { code: "it", name: "Italian" },
     { code: "is", name: "Icelandic" },
     { code: "ka", name: "Georgian" },
+    { code: "ja", name: "Japanese" },
     { code: "kw", name: "Cornish" },
     { code: "nb", name: "Norwegian (Bokmål)" },
     { code: "nl", name: "Dutch" },
@@ -433,7 +434,7 @@ class WeatherViewModel {
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
-                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format(timeFormat)})`
+                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format("dddd " + timeFormat)})`
                 }
                 this.alerts.push({
                     title: title,
