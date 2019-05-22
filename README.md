@@ -16,7 +16,10 @@ at this time. Instead, either use the browser's geolocation support (default)
 or enter your own latitude/longitude in the settings area.
 
 Browser requirements:
-* Firefox / Pale Moon
+* Firefox
+  * Use the [Side View](https://addons.mozilla.org/en-US/firefox/addon/side-view/)
+    extension to load it in the sidebar.
+* Pale Moon
   * Add Weather Sidebar to your bookmarks, then edit the bookmark properties
     to open in the sidebar. For more details, see:
 	https://www.howtogeek.com/251625/how-to-load-a-website-in-firefoxs-sidebar
