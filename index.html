@@ -10,10 +10,10 @@
     <link rel="stylesheet" href="compact-dark.css" type="text/css" />
     <link rel="stylesheet" href="compact-light.css" type="text/css" />
     <link rel="stylesheet" href="modern.css" type="text/css" />
+    <script src="lib/knockout-min.js"></script>
+    <script src="lib/moment.min.js"></script>
+    <script src="lib/moment-timezone-with-data-10-year-range.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/native-promise-only/0.8.1/npo.js" integrity="sha256-o/UXdF4sFrbgV5UCIWF5ca7VMLDdplhzA4knJ4nFsc0=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js" integrity="sha256-owX7sroiO/O1a7h3a4X29A1g3QgqdNvijRQ7V5TH45M=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js" integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.13/moment-timezone-with-data-2012-2022.min.js" integrity="sha256-+5qLxtbk4c2md6Wr70zMmahTHwH+CoFueQVQcRRSusg=" crossorigin="anonymous"></script>
     <script src="fromcodepoint.js"></script>
     <script src="main.js"></script>
     <script type="text/javascript">
@@ -82,7 +82,7 @@
         </div>
     </div>
     <div id="weather" style="display: none" data-bind="if: !settingsModel() && !aboutShown()">
-        <div data-bind="text: error"></div> 
+        <div data-bind="text: error"></div>
         <div data-bind="if: currentLatitude() && currentLongitude()">
             Your location:
             <a id="mapLink" href="#" target="_blank" data-bind="attr: { href: mapLink }">
@@ -148,6 +148,8 @@
         </div>
         <div>
             <a href="#" data-bind="click: openInNewTab" id="openInNewTab">Open in new tab</a>
+        </div>
+        <div>
             <a href="#" data-bind="click: addToSidebar" id="addToSidebar">Add to sidebar</a>
         </div>
         <div>
@@ -162,7 +164,7 @@
         <p><a href="#" data-bind="click: hideAbout">Close</a></p>
         <h1>Weather Sidebar</h1>
         <p>
-            &copy; 2017 Isaac Schemm <br />
+            &copy; 2017-2019 Isaac Schemm <br />
             <a target="_blank" href="https://github.com/isaacschemm/weather-sidebar">https://github.com/isaacschemm/weather-sidebar</a> <br />
             Available under the <a target="_blank" href="COPYING">MIT license.</a>
         </p>
