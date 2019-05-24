@@ -2,6 +2,7 @@ Weather Sidebar
 ===============
 
 https://www.lakora.us/weather
+http://lakora.nfshost.com/weather
 
 This is a cross-browser weather forecast sidebar. It shows the current
 temperature and weather, along with an hourly forecast for the next 12 hours,

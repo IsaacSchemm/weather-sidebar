@@ -179,7 +179,7 @@ class WeatherViewModel {
         try {
             let displaySettingsChanged = false;
             let json = localStorage.getItem("weather-settings");
-            if (json === null) {
+            if (json == null) {
                 json = localStorage.getItem("settings");
                 if (json) {
                     localStorage.setItem("weather-settings", json);
@@ -256,7 +256,7 @@ class WeatherViewModel {
                 latitude: this.defaultLatitude(),
                 longitude: this.defaultLongitude()
             };
-            if (coords.latitude === null || coords.longitude === null) {
+            if (coords.latitude == null || coords.longitude == null) {
                 this.error("No default latitude/longitude is defined in the settings.");
                 return;
             }
@@ -345,8 +345,8 @@ class WeatherViewModel {
                 }
             }
 
-            if (data === null) {
-                this.error("Could not load data from the proxy");
+            if (data == null) {
+                this.error("Could not load data from the proxy. Try manually defining your latitude/longitude in the settings.");
                 return;
             }
 
@@ -394,7 +394,7 @@ class WeatherViewModel {
                     time: moment.tz(h.time * 1000, timezone).format("dddd"),
                     tempMax: Math.round(h.temperatureMax || 0) + String.fromCodePoint(0xB0),
                     tempMin: Math.round(h.temperatureMin || 0) + String.fromCodePoint(0xB0),
-                    humidity: h.humidity === null ? null : Math.round(h.humidity * 100),
+                    humidity: h.humidity == null ? null : Math.round(h.humidity * 100),
                     icon: icon,
                     summary: h.summary,
                     precipProbability: Math.round(h.precipProbability * 100) + "%"
