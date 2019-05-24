@@ -1,0 +1,21 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "destination": "lib",
+      "library": "knockout@3.5.0",
+      "files": [ "knockout-min.js" ]
+    },
+    {
+      "destination": "lib",
+      "library": "moment.js@2.24.0",
+      "files": ["moment.min.js"]
+    },
+    {
+      "destination": "lib",
+      "library": "moment-timezone@0.5.25",
+      "files": [ "moment-timezone-with-data-10-year-range.min.js" ]
+    }
+  ]
+}

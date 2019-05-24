@@ -32,35 +32,51 @@ const WeatherSupportedLanguages = [
     { code: "az", name: "Azerbaijani" },
     { code: "be", name: "Belarusian" },
     { code: "bg", name: "Bulgarian" },
+    { code: "bs", name: "Bengali" },
     { code: "bs", name: "Bosnian" },
     { code: "ca", name: "Catalan" },
     { code: "cs", name: "Czech" },
+    { code: "da", name: "Danish" },
     { code: "de", name: "German" },
     { code: "el", name: "Greek" },
     { code: "en", name: "English" },
+    { code: "eo", name: "Esperanto" },
     { code: "es", name: "Spanish" },
     { code: "et", name: "Estonian" },
+    { code: "fi", name: "Finnish" },
     { code: "fr", name: "French" },
+    { code: "he", name: "Hebrew" },
+    { code: "hi", name: "Hindi" },
     { code: "hr", name: "Croatian" },
     { code: "hu", name: "Hungarian" },
     { code: "id", name: "Indonesian" },
-    { code: "it", name: "Italian" },
     { code: "is", name: "Icelandic" },
-    { code: "ka", name: "Georgian" },
+    { code: "it", name: "Italian" },
     { code: "ja", name: "Japanese" },
+    { code: "ka", name: "Georgian" },
+    { code: "kn", name: "Kannada" },
+    { code: "ko", name: "Korean" },
     { code: "kw", name: "Cornish" },
+    { code: "lv", name: "Latvian" },
+    { code: "ml", name: "Malayam" },
+    { code: "mr", name: "Marathi" },
     { code: "nb", name: "Norwegian (Bokmål)" },
     { code: "nl", name: "Dutch" },
+    { code: "pa", name: "Punjabi" },
     { code: "pl", name: "Polish" },
     { code: "pt", name: "Portuguese" },
+    { code: "ro", name: "Romanian" },
     { code: "ru", name: "Russian" },
     { code: "sk", name: "Slovak" },
     { code: "sl", name: "Slovenian" },
     { code: "sr", name: "Serbian" },
     { code: "sv", name: "Swedish" },
+    { code: "ta", name: "Tamil" },
+    { code: "te", name: "Telgu" },
     { code: "tet", name: "Tetum" },
     { code: "tr", name: "Turkish" },
     { code: "uk", name: "Ukrainian" },
+    { code: "ur", name: "Urdu" },
     { code: "zh", name: "Chinese (Simplified)" },
     { code: "zh-tw", name: "Chinese (Traditional)" }
 ];
@@ -75,7 +91,7 @@ const WeatherDefaultSettings = {
     defaultLatitude: 0,
     defaultLongitude: 0,
     useGeolocation: true,
-    theme: "compact-light",
+    theme: "native",
     useTwitterEmoji: (() => {
         if (/(Windows|OS X|iOS|Android)/.test(navigator.userAgent)) {
             if (!/(Windows NT [456]\.|OS X 10_[0123456]_)/.test(navigator.userAgent)) {
@@ -83,8 +99,8 @@ const WeatherDefaultSettings = {
             }
         }
         return true;
-    })(),
-}
+    })()
+};
 
 class WeatherViewModel {
     constructor() {
@@ -163,7 +179,7 @@ class WeatherViewModel {
         try {
             let displaySettingsChanged = false;
             let json = localStorage.getItem("weather-settings");
-            if (json == null) {
+            if (json === null) {
                 json = localStorage.getItem("settings");
                 if (json) {
                     localStorage.setItem("weather-settings", json);
@@ -174,31 +190,31 @@ class WeatherViewModel {
             let settings = Object.assign(WeatherDefaultSettings, JSON.parse(json || "{}"));
 
             // Clock settings
-            if (this.language() != settings.language) {
+            if (this.language() !== settings.language) {
                 this.language(settings.language);
                 displaySettingsChanged = true;
             }
-            if (this.units() != settings.units) {
+            if (this.units() !== settings.units) {
                 this.units(settings.units);
                 displaySettingsChanged = true;
             }
-            if (this.twelveHourTime() != settings.twelveHourTime) {
+            if (this.twelveHourTime() !== settings.twelveHourTime) {
                 this.twelveHourTime(settings.twelveHourTime);
                 displaySettingsChanged = true;
             }
-            if (this.useLocationTime() != settings.useLocationTime) {
+            if (this.useLocationTime() !== settings.useLocationTime) {
                 this.useLocationTime(settings.useLocationTime);
                 displaySettingsChanged = true;
             }
-            if (this.hoursAhead() != settings.hoursAhead) {
+            if (this.hoursAhead() !== settings.hoursAhead) {
                 this.hoursAhead(settings.hoursAhead);
                 displaySettingsChanged = true;
             }
-            if (this.daysAhead() != settings.daysAhead) {
+            if (this.daysAhead() !== settings.daysAhead) {
                 this.daysAhead(settings.daysAhead);
                 displaySettingsChanged = true;
             }
-            if (this.useTwitterEmoji() != settings.useTwitterEmoji) {
+            if (this.useTwitterEmoji() !== settings.useTwitterEmoji) {
                 this.useTwitterEmoji(settings.useTwitterEmoji);
                 displaySettingsChanged = true;
             }
@@ -240,13 +256,13 @@ class WeatherViewModel {
                 latitude: this.defaultLatitude(),
                 longitude: this.defaultLongitude()
             };
-            if (coords.latitude == null || coords.longitude == null) {
+            if (coords.latitude === null || coords.longitude === null) {
                 this.error("No default latitude/longitude is defined in the settings.");
                 return;
             }
         }
 
-        if (!force && coords.latitude == this.currentLatitude() && coords.longitude == this.currentLongitude()) {
+        if (!force && coords.latitude === this.currentLatitude() && coords.longitude === this.currentLongitude()) {
             console.log("Same location, not updating weather");
             return;
         }
@@ -260,7 +276,7 @@ class WeatherViewModel {
         const str = String.fromCodePoint(codePoint) + String.fromCodePoint(0xFE0F);
         if (this.useTwitterEmoji()) {
             if (!window.twemoji) {
-                await loadScript("https://twemoji.maxcdn.com/2/twemoji.min.js?2.3.0");
+                await loadScript("//twemoji.maxcdn.com/2/twemoji.min.js?2.3.0");
             }
             return twemoji.parse(str);
         } else {
@@ -329,12 +345,10 @@ class WeatherViewModel {
                 }
             }
 
-            if (data == null) {
+            if (data === null) {
                 this.error("Could not load data from the proxy");
                 return;
             }
-
-            console.log(data);
 
             let timezone = this.useLocationTime()
                 ? data.timezone
@@ -347,7 +361,7 @@ class WeatherViewModel {
             for (let a of data.alerts || []) {
                 let title = a.title;
                 if (a.expires) {
-                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format("dddd " + timeFormat)})`
+                    title += ` (until ${moment.tz(a.expires * 1000, timezone).format("dddd " + timeFormat)})`;
                 }
                 this.alerts.push({
                     title: title,
@@ -380,7 +394,7 @@ class WeatherViewModel {
                     time: moment.tz(h.time * 1000, timezone).format("dddd"),
                     tempMax: Math.round(h.temperatureMax || 0) + String.fromCodePoint(0xB0),
                     tempMin: Math.round(h.temperatureMin || 0) + String.fromCodePoint(0xB0),
-                    humidity: h.humidity == null ? null : h.humidity * 100,
+                    humidity: h.humidity === null ? null : Math.round(h.humidity * 100),
                     icon: icon,
                     summary: h.summary,
                     precipProbability: Math.round(h.precipProbability * 100) + "%"
@@ -460,7 +474,7 @@ class SettingsViewModel {
             useGeolocation: !!this.useGeolocation(),
             useTwitterEmoji: !!this.useTwitterEmoji(),
             theme: this.theme()
-        }
+        };
         localStorage.setItem("weather-settings", JSON.stringify(settings));
         this.parent.settingsModel(null);
         this.parent.loadSettings();
