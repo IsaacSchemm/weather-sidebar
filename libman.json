@@ -16,6 +16,11 @@
       "destination": "lib",
       "library": "moment-timezone@0.5.25",
       "files": [ "moment-timezone-with-data-10-year-range.min.js" ]
+    },
+    {
+      "destination": "lib",
+      "library": "native-promise-only@0.8.1",
+      "files": ["npo.js"]
     }
   ]
 }

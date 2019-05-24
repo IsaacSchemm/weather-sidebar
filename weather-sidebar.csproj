@@ -78,6 +78,7 @@
     <Content Include="lib\moment-timezone-with-data-10-year-range.min.js" />
     <Content Include="lib\moment.min.js" />
     <Content Include="fromcodepoint.js" />
+    <Content Include="lib\npo.js" />
     <Content Include="modern.css" />
     <Content Include="packages.config" />
     <Content Include="libman.json" />
