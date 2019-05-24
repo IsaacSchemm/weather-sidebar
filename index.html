@@ -149,7 +149,7 @@
         <div>
             <a href="#" data-bind="click: openInNewTab" id="openInNewTab">Open in new tab</a>
         </div>
-        <div>
+        <div data-bind="if: window.sidebar && window.sidebar.addPanel">
             <a href="#" data-bind="click: addToSidebar" id="addToSidebar">Add to sidebar</a>
         </div>
         <div>

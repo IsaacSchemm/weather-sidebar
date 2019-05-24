@@ -23,7 +23,7 @@ Browser requirements:
   * Add Weather Sidebar to your bookmarks, then edit the bookmark properties
     to open in the sidebar. For more details, see:
 	https://www.howtogeek.com/251625/how-to-load-a-website-in-firefoxs-sidebar
-* SeaMonkey / Classilla
+* SeaMonkey / Netscape / Classilla
   * Use Weather Sidebar's "Add to sidebar" link.
 * Vivaldi
   * Add Weather Sidebar as a Web Panel
