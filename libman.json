@@ -20,7 +20,23 @@
     {
       "destination": "lib",
       "library": "native-promise-only@0.8.1",
-      "files": ["npo.js"]
+      "files": [ "npo.js" ]
+    },
+    {
+      "destination": "lib",
+      "library": "json3@3.3.2",
+      "files": [ "json3.min.js" ]
+    },
+    {
+      "destination": "lib",
+      "provider": "unpkg",
+      "library": "localstorage-browser-polyfill@0.1.0",
+      "files": [ "localstorage-browser-polyfill.js" ]
+    },
+    {
+      "destination": "lib",
+      "library": "fetch@2.0.4",
+      "files": ["fetch.min.js"]
     }
   ]
 }

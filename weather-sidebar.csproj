@@ -74,7 +74,10 @@
     <TypeScriptCompile Include="es2015.promise.d.ts" />
     <TypeScriptCompile Include="main.ts" />
     <None Include="COPYING" />
+    <Content Include="lib\fetch.min.js" />
+    <Content Include="lib\json3.min.js" />
     <Content Include="lib\knockout-min.js" />
+    <Content Include="lib\localstorage-browser-polyfill.js" />
     <Content Include="lib\moment-timezone-with-data-10-year-range.min.js" />
     <Content Include="lib\moment.min.js" />
     <Content Include="fromcodepoint.js" />

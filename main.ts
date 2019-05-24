@@ -244,7 +244,7 @@ class WeatherViewModel {
         try {
             let displaySettingsChanged = false;
             if (!window.localStorage) {
-                await loadScript("http://unpkg.com/localstorage-browser-polyfill/localstorage-browser-polyfill.js");
+                await loadScript("lib/localstorage-browser-polyfill.js");
             }
             let json = localStorage.getItem("weather-settings");
             if (json == null) {
@@ -255,7 +255,7 @@ class WeatherViewModel {
                 }
             }
             if (!window["JSON"]) {
-                await loadScript("https://cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js");
+                await loadScript("lib/json3.min.js");
             }
 
             let settings = { ...WeatherDefaultSettings, ...JSON.parse(json || "{}") };
@@ -320,10 +320,6 @@ class WeatherViewModel {
             longitude: number | string;
         };
         try {
-            if (!window["fetch"]) {
-                await loadScript("https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.js");
-            }
-
             // If the user has turned off geolocation, don't try to use it.
             if (!this.useGeolocation()) throw "Geolocation is turned off.";
             // Otherwise, ask for permission through the browser.
